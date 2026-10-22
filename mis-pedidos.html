@@ -500,6 +500,10 @@
           <button type="button" data-install hidden class="inline-flex h-10 items-center gap-2 rounded-full bg-brand-600 px-4 text-xs font-bold text-white hover:bg-brand-700"><i data-lucide="smartphone" class="h-4 w-4"></i>Instalar la app</button>
         </span>
       </div>
+      <div id="listTabs" class="mb-4 hidden flex-wrap items-center justify-between gap-2">
+        <div id="listTabsBtns" class="flex flex-wrap gap-1.5" role="tablist" aria-label="Pedidos"></div>
+        <label class="flex min-w-0 items-center gap-2 text-sm font-semibold text-stone-600"><i data-lucide="briefcase" class="h-4 w-4 shrink-0"></i><span class="sr-only">Filtrar por cliente u obra</span><select id="obraFilter" class="field hidden !h-10 !w-auto !min-w-[220px] !rounded-full !py-0 !text-sm"></select></label>
+      </div>
       <div id="orderList" class="grid gap-3 sm:gap-4 lg:grid-cols-2" data-stagger></div>
     </div>
 
@@ -1167,7 +1171,7 @@ function orderCard(p) {
   return `
   <a href="#${p.id}" data-tilt class="group block rounded-[1.5rem] bg-white p-5 shadow-sm ring-1 ring-transparent transition hover:shadow-xl hover:ring-stone-200 sm:p-6">
     <div class="flex items-start justify-between gap-3">
-      <div><p class="text-lg font-extrabold">Pedido ${p.id}</p><p class="mt-0.5 text-xs text-stone-400">${CO.timeAgo(p.createdAt)} · ${p.items.length} material${p.items.length > 1 ? 'es' : ''}</p></div>
+      <div><p class="text-lg font-extrabold">Pedido ${p.id}</p><p class="mt-0.5 text-xs text-stone-400">${CO.timeAgo(p.createdAt)} · ${p.items.length} material${p.items.length > 1 ? 'es' : ''}</p>${p.obra ? `<p class="mt-1.5 inline-flex max-w-full items-center gap-1.5 rounded-full bg-sky-50 px-2.5 py-1 text-[11px] font-bold text-sky-800 ring-1 ring-sky-100"><i data-lucide="briefcase" class="h-3 w-3 shrink-0"></i><span class="truncate">Para ${esc(p.obra.nombre)}</span></p>` : ''}</div>
       <span class="flex shrink-0 flex-col items-end gap-1.5"><span class="rounded-full px-3 py-1 text-[11px] font-bold ${CHIP[st.key]}">${st.label}</span>${unread ? `<span class="inline-flex items-center gap-1 rounded-full bg-brand-600 px-2.5 py-0.5 text-[11px] font-bold text-white">${waIcon('h-3 w-3')}${unread} mensaje${unread > 1 ? 's' : ''}</span>` : ''}</span>
     </div>
     <div class="mt-4 flex flex-wrap gap-x-4 gap-y-1.5 text-sm text-stone-600">
@@ -1185,17 +1189,46 @@ function orderCard(p) {
     </div>
   </a>`;
 }
+let listTab = 'activos', obraFiltro = '';
 function renderList() {
-  const c = CO.clienteActual(), list = CO.pedidosDeCliente(c.email);
-  $('#listSub').textContent = list.length ? `${list.length} pedido${list.length > 1 ? 's' : ''} a nombre de ${c.nombre} ${c.apellido}` : '';
-  $('#orderList').innerHTML = list.length ? list.map(orderCard).join('') : `
+  const c = CO.clienteActual(), activos = CO.pedidosDeCliente(c.email), arch = CO.pedidosArchivados(c.email);
+  if (listTab === 'archivados' && !arch.length) listTab = 'activos';
+  const base = listTab === 'archivados' ? arch : activos;
+  const obras = [...new Map(activos.concat(arch).filter(p => p.obra).map(p => [p.obra.id, p.obra])).values()];
+  if (obraFiltro && !obras.some(o => o.id === obraFiltro)) obraFiltro = '';
+  const list = obraFiltro ? base.filter(p => p.obra && p.obra.id === obraFiltro) : base;
+  const of = $('#obraFilter');
+  of.classList.toggle('hidden', !obras.length);
+  of.innerHTML = `<option value="">Todos los clientes y obras</option>` + obras.map(o => `<option value="${o.id}" ${o.id === obraFiltro ? 'selected' : ''}>${esc(o.nombre)}</option>`).join('');
+  $('#listSub').textContent = activos.length || arch.length ? `${activos.length} pedido${activos.length === 1 ? '' : 's'} activo${activos.length === 1 ? '' : 's'}${arch.length ? ` · ${arch.length} archivado${arch.length > 1 ? 's' : ''}` : ''} · a nombre de ${c.nombre} ${c.apellido}` : '';
+  const tabs = $('#listTabs');
+  tabs.classList.toggle('hidden', !arch.length && !obras.length); tabs.classList.toggle('flex', !!(arch.length || obras.length));
+  $('#listTabsBtns').classList.toggle('hidden', !arch.length);
+  $('#listTabsBtns').innerHTML = [['activos', 'Activos', activos.length, 'inbox'], ['archivados', 'Archivados', arch.length, 'archive']].map(([k, l, n, ic]) => `<button type="button" class="mode-btn no-press inline-flex items-center gap-2 rounded-full bg-white px-4 py-2.5 text-sm font-bold shadow-sm" role="tab" aria-pressed="${listTab === k}" aria-selected="${listTab === k}" data-ltab="${k}"><i data-lucide="${ic}" class="h-4 w-4"></i>${l}<span class="rounded-full bg-stone-100 px-2 py-0.5 text-[11px] tabular-nums text-stone-600">${n}</span></button>`).join('');
+  $('#orderList').innerHTML = list.length ? list.map(p => listTab === 'archivados' ? archCard(p) : orderCard(p)).join('') : `
     <div class="rounded-[1.75rem] bg-white px-6 py-14 text-center shadow-sm lg:col-span-2">
       <span class="mx-auto grid h-14 w-14 place-items-center rounded-full bg-brand-50 text-brand-600"><i data-lucide="clipboard-list" class="h-7 w-7"></i></span>
-      <h3 class="mt-4 text-xl font-extrabold">Todavía no hiciste pedidos</h3>
-      <p class="mx-auto mt-1.5 max-w-sm text-sm text-stone-500">Cargá tu lista de materiales y te llegan los presupuestos de los corralones de tu zona.</p>
-      <a href="pedir-cotizacion.html" class="mt-6 inline-flex items-center gap-2 rounded-full bg-brand-600 px-6 py-3 text-sm font-bold text-white hover:bg-brand-700"><i data-lucide="plus" class="h-4 w-4"></i>Armar mi pedido</a>
+      <h3 class="mt-4 text-xl font-extrabold">${arch.length ? 'No tenés pedidos activos' : 'Todavía no hiciste pedidos'}</h3>
+      <p class="mx-auto mt-1.5 max-w-sm text-sm text-stone-500">${arch.length ? 'Tus pedidos anteriores están en la pestaña Archivados.' : 'Cargá tu lista de materiales y te llegan los presupuestos de los corralones de tu zona.'}</p>
+      <a href="pedir-cotizacion.html" class="mt-6 inline-flex items-center gap-2 rounded-full bg-brand-600 px-6 py-3 text-sm font-bold text-white hover:bg-brand-700"><i data-lucide="plus" class="h-4 w-4"></i>Armar un pedido</a>
     </div>`;
   renderIcons();
+}
+function archCard(p) {
+  const st = CO.estado(p), adj = p.adjudicacion ? p.adjudicacion.partes : null;
+  return `
+  <div class="flex flex-col rounded-[1.5rem] bg-white/70 p-5 shadow-sm ring-1 ring-stone-200 sm:p-6">
+    <div class="flex items-start justify-between gap-3">
+      <div><p class="text-lg font-extrabold">Pedido ${p.id}</p><p class="mt-0.5 text-xs text-stone-500">${CO.fmtDate(new Date(p.createdAt).toISOString().slice(0, 10))} · ${p.items.length} material${p.items.length > 1 ? 'es' : ''} · ${esc(p.localidad)}</p>${p.obra ? `<p class="mt-1.5 inline-flex max-w-full items-center gap-1.5 rounded-full bg-sky-50 px-2.5 py-1 text-[11px] font-bold text-sky-800 ring-1 ring-sky-100"><i data-lucide="briefcase" class="h-3 w-3 shrink-0"></i><span class="truncate">Para ${esc(p.obra.nombre)}</span></p>` : ''}</div>
+      <span class="inline-flex shrink-0 items-center gap-1 rounded-full bg-stone-100 px-3 py-1 text-[11px] font-bold text-stone-600"><i data-lucide="archive" class="h-3 w-3"></i>Archivado · ${st.label}</span>
+    </div>
+    <p class="mt-3 text-sm text-stone-600">${adj ? `Le compraste a <b class="text-ink">${adj.map(x => esc(CO.nombreCorralon(x.corralonId))).join(' y ')}</b>` : 'Sin compra'}</p>
+    <div class="mt-4 flex flex-wrap items-center justify-end gap-2 border-t border-stone-100 pt-4">
+      <button type="button" data-unarch="${esc(p.id)}" class="inline-flex h-10 items-center gap-1.5 rounded-full px-4 text-sm font-bold text-stone-600 hover:bg-stone-100"><i data-lucide="archive-restore" class="h-4 w-4"></i>Desarchivar</button>
+      <a href="pedir-cotizacion.html" data-repetir="${esc(p.id)}" class="inline-flex h-10 items-center gap-1.5 rounded-full bg-stone-100 px-4 text-sm font-bold hover:bg-stone-200"><i data-lucide="repeat" class="h-4 w-4"></i>Repetir</a>
+      <a href="#${esc(p.id)}" class="inline-flex h-10 items-center gap-1.5 rounded-full bg-brand-600 px-4 text-sm font-bold text-white hover:bg-brand-700">Ver<i data-lucide="arrow-right" class="h-4 w-4"></i></a>
+    </div>
+  </div>`;
 }
 
 /* ---------- Detail ---------- */
@@ -1609,12 +1642,14 @@ function renderDetail(id) {
       <div>
         <div class="flex flex-wrap items-center gap-3"><h2 class="text-2xl font-extrabold tracking-tight sm:text-3xl">Pedido ${p.id}</h2><span class="rounded-full px-3.5 py-1.5 text-xs font-bold ${CHIP[st.key]}">${st.label}</span></div>
         <p class="mt-1 text-sm text-stone-500">Enviado ${CO.timeAgo(p.createdAt)} · ${p.items.length} materiales · ${esc(p.localidad)}, ${esc(p.provincia)}</p>
+        ${p.obra ? `<p class="mt-2 inline-flex items-center gap-1.5 rounded-full bg-sky-50 px-3 py-1.5 text-xs font-bold text-sky-800 ring-1 ring-sky-100"><i data-lucide="briefcase" class="h-3.5 w-3.5"></i>Para ${esc(p.obra.nombre)}${p.obra.ref ? ` · <span class="font-semibold">${esc(p.obra.ref)}</span>` : ''}</p>` : ''}
         ${plazoBar(p, qs)}
       </div>
       <div class="flex flex-wrap gap-2">
         ${qs.length ? `<button type="button" id="pdfBtn" class="inline-flex h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-bold shadow-sm hover:bg-stone-100"><i data-lucide="file-down" class="h-4 w-4"></i>Descargar PDF</button>` : ''}
         <a href="pedir-cotizacion.html" data-repetir="${esc(p.id)}" class="inline-flex h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-bold shadow-sm hover:bg-stone-100"><i data-lucide="repeat" class="h-4 w-4"></i>Repetir pedido</a>
-        <button type="button" data-del="${esc(p.id)}" class="inline-flex h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-bold text-stone-500 shadow-sm hover:bg-brand-50 hover:text-brand-700" title="${p.adjudicacion ? 'Archivar pedido' : 'Eliminar pedido'}"><i data-lucide="${p.adjudicacion ? 'archive' : 'trash-2'}" class="h-4 w-4"></i><span class="sr-only sm:not-sr-only">${p.adjudicacion ? 'Archivar' : 'Eliminar'}</span></button>
+        ${p.archivado ? `<button type="button" data-unarch-d="${esc(p.id)}" class="inline-flex h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-bold text-stone-600 shadow-sm hover:bg-stone-100"><i data-lucide="archive-restore" class="h-4 w-4"></i>Desarchivar</button>` : ''}
+        <button type="button" data-del="${esc(p.id)}" ${p.archivado ? 'hidden' : ''} class="inline-flex h-11 items-center gap-2 rounded-full bg-white px-4 text-sm font-bold text-stone-500 shadow-sm hover:bg-brand-50 hover:text-brand-700" title="${p.adjudicacion ? 'Archivar pedido' : 'Eliminar pedido'}"><i data-lucide="${p.adjudicacion ? 'archive' : 'trash-2'}" class="h-4 w-4"></i><span class="sr-only sm:not-sr-only">${p.adjudicacion ? 'Archivar' : 'Eliminar'}</span></button>
       </div>
     </div>
 
@@ -1791,20 +1826,26 @@ const shareNote = names => `<ul class="mt-5 space-y-3 text-sm text-stone-600">
 function askDelete(id) {
   const p = CO.pedido(id); if (!p) return;
   const arch = !!p.adjudicacion, n = CO.respuestas(p).length;
-  confirmDialog(arch ? `Archivar el pedido ${p.id}` : `Eliminar el pedido ${p.id}`, arch ? 'Lo sacamos de tu lista' : 'Se borra para todos', arch
-    ? `<p class="text-sm leading-relaxed text-stone-600">Ya le compraste a un corralón, así que el pedido queda guardado para la entrega y el corralón conserva su venta. Solo deja de aparecer en tu lista.</p>`
+  confirmDialog(arch ? `Archivar el pedido ${p.id}` : `Eliminar el pedido ${p.id}`, arch ? 'Pasa a Archivados' : 'Se borra para todos', arch
+    ? `<p class="text-sm leading-relaxed text-stone-600">Ya le compraste a un corralón, así que el pedido queda guardado para la entrega y el corralón conserva su venta. Pasa a la pestaña <b>Archivados</b> de Mis pedidos, y lo podés desarchivar cuando quieras.</p>`
     : `<p class="text-sm leading-relaxed text-stone-600">El pedido desaparece de tu lista y de la bandeja de los corralones.${n ? ` Se pierden los <b>${n} presupuesto${n > 1 ? 's' : ''}</b> que recibiste y las conversaciones.` : ''}</p>`, () => {
     const r = CO.borrarPedido(id);
     if (currentId() === id) location.hash = '';
-    toast(arch ? 'Pedido archivado' : 'Pedido eliminado', { type: 'success', desc: `Pedido ${id}`, action: { label: 'Deshacer', onClick: () => { CO.restaurarPedido(r, id); toast('Listo, lo recuperamos'); } } });
+    toast(arch ? 'Pedido archivado' : 'Pedido eliminado', { type: 'success', desc: arch ? `Lo encontrás en Mis pedidos → Archivados.` : `Pedido ${id}`, action: { label: 'Deshacer', onClick: () => { CO.restaurarPedido(r, id); toast('Listo, lo recuperamos'); } } });
   });
   const b = $('#confirmBtn'); if (b) { b.innerHTML = `<i data-lucide="${arch ? 'archive' : 'trash-2'}" class="h-4 w-4"></i>${arch ? 'Archivar' : 'Eliminar pedido'}`; renderIcons(); }
 }
+$('#obraFilter').addEventListener('change', e => { obraFiltro = e.target.value; renderList(); });
+$('#listTabs').addEventListener('click', e => { const t = e.target.closest('[data-ltab]'); if (!t) return; listTab = t.dataset.ltab; renderList(); });
 $('#orderList').addEventListener('click', e => {
+  const ua = e.target.closest('[data-unarch]');
+  if (ua) { e.preventDefault(); CO.desarchivarPedido(ua.dataset.unarch); toast('Pedido desarchivado', { type: 'success', desc: `El pedido ${ua.dataset.unarch} volvió a tus pedidos activos.` }); renderList(); return; }
+  const rp = e.target.closest('[data-repetir]'); if (rp) { e.preventDefault(); CO.irA('pedir-cotizacion.html', { repetir: rp.dataset.repetir }); return; }
   const d = e.target.closest('[data-del]'); if (!d) return;
   e.preventDefault(); e.stopPropagation(); askDelete(d.dataset.del);
 });
 function detailAction(e) {
+  const ud = e.target.closest('[data-unarch-d]'); if (ud) { CO.desarchivarPedido(ud.dataset.unarchD); toast('Pedido desarchivado', { type: 'success', desc: 'Volvió a tus pedidos activos.' }); renderDetail(currentId()); return; }
   const del = e.target.closest('[data-del]'); if (del) { askDelete(del.dataset.del); return; }
   if (e.target.closest('#closeOrder')) {
     const p = CO.pedido(currentId()), faltan = CO.destinatarios(p).length - CO.respuestas(p).length;

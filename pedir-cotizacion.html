@@ -351,6 +351,18 @@
             <label class="seg cursor-pointer"><input type="radio" name="tipo" value="constructora" class="sr-only"><span class="flex h-full flex-col items-center justify-center gap-1.5 rounded-2xl border border-stone-200 px-2 py-3 text-center text-xs font-bold transition sm:flex-row sm:rounded-full sm:text-sm"><i data-lucide="hard-hat" class="h-4 w-4"></i>Constructora</span></label>
             <label class="seg cursor-pointer"><input type="radio" name="tipo" value="estudio" class="sr-only"><span class="flex h-full flex-col items-center justify-center gap-1.5 rounded-2xl border border-stone-200 px-2 py-3 text-center text-xs font-bold transition sm:flex-row sm:rounded-full sm:text-sm"><i data-lucide="pen-tool" class="h-4 w-4"></i><span>Estudio<span class="hidden sm:inline"> de arquitectura</span></span></span></label>
           </div>
+          <div id="obraWrap" class="mt-5 hidden rounded-2xl bg-sky-50/70 p-4 ring-1 ring-sky-100 sm:p-5">
+            <label class="label !text-sky-900" for="obraSel"><span id="obraLabel">¿Para qué cliente u obra es este pedido?</span> *</label>
+            <div class="flex flex-col gap-2 sm:flex-row">
+              <select id="obraSel" class="field sm:flex-1"></select>
+              <button type="button" id="obraNewBtn" class="inline-flex h-12 shrink-0 items-center justify-center gap-2 rounded-xl bg-white px-4 text-sm font-bold text-sky-800 ring-1 ring-sky-200 hover:ring-sky-400"><i data-lucide="plus" class="h-4 w-4"></i>Nuevo cliente</button>
+            </div>
+            <div id="obraNew" class="mt-3 hidden grid gap-2 sm:grid-cols-2">
+              <div><label class="label" for="obraNombre">Cliente u obra *</label><input id="obraNombre" class="field" placeholder="Ej.: Casa López · Barrio Norte" maxlength="80" /></div>
+              <div><label class="label" for="obraRef">Referencia <span class="font-medium normal-case tracking-normal text-stone-500">(opcional)</span></label><input id="obraRef" class="field" placeholder="Ej.: Expte. 12/26, lote 14, etapa 2" maxlength="80" /></div>
+            </div>
+            <p class="mt-2 text-xs text-sky-900/80">Queda guardado para tus próximos pedidos y te sirve para filtrar en Mis pedidos. Los corralones ven el nombre de la obra como referencia.</p>
+          </div>
         </fieldset>
 
         <!-- 2. Materiales -->
@@ -1364,9 +1376,37 @@ $('#clearAll').addEventListener('click', () => {
 
 /* ---------- Tipo / summary ---------- */
 const currentTipo = () => $('input[name=tipo]:checked').value;
+/* ---------- Cliente / obra (constructoras y estudios) ---------- */
+let obraNueva = false;
+function paintObras(selId) {
+  const email = (CO.clienteActual() || {}).email || $('#email').value.trim();
+  const list = CO.obrasDe(email), sel = $('#obraSel'), cur = selId || sel.value;
+  sel.innerHTML = `<option value="">${list.length ? 'Elegí un cliente u obra' : 'Todavía no cargaste clientes'}</option>` + list.map(o => `<option value="${o.id}">${esc(o.nombre)}${o.ref ? ' · ' + esc(o.ref) : ''}</option>`).join('') + '<option value="__new">+ Nuevo cliente u obra…</option>';
+  if (cur && [...sel.options].some(op => op.value === cur)) sel.value = cur;
+  if (!list.length && !obraNueva) setObraNueva(true);
+}
+function setObraNueva(on) {
+  obraNueva = on;
+  $('#obraNew').classList.toggle('hidden', !on); $('#obraNew').classList.toggle('grid', on);
+  $('#obraNewBtn').classList.toggle('hidden', on);
+  if (on) { $('#obraSel').value = '__new'; setTimeout(() => { if (!isPhone()) $('#obraNombre').focus(); }, 50); }
+}
+$('#obraSel').addEventListener('change', e => { setObraNueva(e.target.value === '__new'); $('#obraSel').classList.remove('invalid'); update(); });
+$('#obraNewBtn').addEventListener('click', () => setObraNueva(true));
+$('#email').addEventListener('change', () => { if (currentTipo() !== 'particular' && !obraNueva) paintObras(); });
+['#obraNombre', '#obraRef'].forEach(sel => $(sel).addEventListener('input', () => $(sel).classList.remove('invalid')));
+const obraElegida = () => {
+  if (currentTipo() === 'particular') return null;
+  if (obraNueva) { const n = $('#obraNombre').value.trim(); return n ? { nuevo: true, nombre: n, ref: $('#obraRef').value.trim() } : null; }
+  const o = CO.obrasDe((CO.clienteActual() || {}).email || $('#email').value.trim()).find(x => x.id === $('#obraSel').value);
+  return o ? { id: o.id, nombre: o.nombre, ref: o.ref || '' } : null;
+};
 function onTipo() {
   const t = currentTipo();
   $('#empresaWrap').classList.toggle('hidden', t === 'particular');
+  $('#obraWrap').classList.toggle('hidden', t === 'particular');
+  $('#obraLabel').textContent = t === 'estudio' ? '¿Para qué cliente o proyecto es este pedido?' : '¿Para qué cliente u obra es este pedido?';
+  if (t !== 'particular') paintObras();
   $('#empresaLabel').textContent = t === 'estudio' ? 'Estudio' : 'Empresa';
   update();
 }
@@ -1432,6 +1472,7 @@ function validate() {
   mark($('#nombre'), !!$('#nombre').value.trim());
   mark($('#apellido'), !!$('#apellido').value.trim());
   if (currentTipo() !== 'particular') mark($('#empresa'), !!$('#empresa').value.trim());
+  if (currentTipo() !== 'particular') { const ob = obraElegida(); if (obraNueva) mark($('#obraNombre'), !!ob); else mark($('#obraSel'), !!ob); }
   mark($('#email'), EMAIL_OK($('#email').value.trim()));
   mark($('#telefono'), $('#telefono').value.replace(/\D/g, '').length >= 8);
   if (errs.length) {
@@ -1445,11 +1486,11 @@ function validate() {
 }
 
 /* ---------- Order preview ---------- */
+const casillero = (pre, hint = '') => `<span class="inline-flex h-8 w-28 items-center gap-1 rounded-lg border border-dashed border-sky-300 bg-sky-50 px-3 text-sm font-semibold text-sky-700 sm:h-9 sm:w-36" aria-hidden="true">${pre}${hint ? `<span class="text-xs font-medium text-sky-700/70">${hint}</span>` : ''}</span>`;
 function orderHTML(sent) {
   const items = getItems().filter(i => i.name);
   const loc = [$('#localidad').value.trim(), $('#provincia').value].filter(Boolean).join(', ') || 'Sin indicar';
   const empresa = currentTipo() !== 'particular' && $('#empresa').value.trim() ? ` · ${esc($('#empresa').value.trim())}` : '';
-  const blank = '<span class="text-brand-400">$ ______</span>';
   return `
     ${sent ? `<div class="mb-4 flex items-start gap-4 rounded-2xl bg-emerald-50 p-5 text-emerald-800">
       <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-emerald-500 text-white"><i data-lucide="check" class="h-5 w-5"></i></span>
@@ -1465,32 +1506,35 @@ function orderHTML(sent) {
       </div>
       <p class="border-t border-brand-100 px-5 py-3 text-xs leading-relaxed text-stone-600">Guardalo: con <b class="text-ink">${esc(sent.email)}</b> y este PIN entrás a <b class="text-ink">Mis pedidos</b> para seguir tu pedido y comparar presupuestos. También te lo enviamos por email.</p>
     </div>` : `<div class="mb-6 flex items-start gap-3 rounded-2xl bg-sand p-4 text-sm text-stone-600"><i data-lucide="user-check" class="mt-0.5 h-5 w-5 shrink-0 text-emerald-600"></i><span>${sent.existed ? `Ya tenés acceso con <b>${esc(sent.email)}</b>: entrá a Mis pedidos con tu PIN para seguir este pedido.` : `Lo sumamos a tus pedidos, <b>${esc(sent.nombre)}</b>.`}</span></div>`}` : ''}
-    <div class="grid grid-cols-2 gap-2 text-sm sm:grid-cols-4 sm:gap-3">
-      <div class="rounded-2xl bg-sand p-3.5"><p class="text-[11px] font-bold uppercase tracking-wider text-stone-400">Solicitante</p><p class="mt-1 font-bold">${TIPO_LABEL[currentTipo()]}${empresa}</p></div>
-      <div class="rounded-2xl bg-sand p-3.5"><p class="text-[11px] font-bold uppercase tracking-wider text-stone-400">Obra</p><p class="mt-1 font-bold">${esc(loc)}</p></div>
-      <div class="rounded-2xl bg-sand p-3.5"><p class="text-[11px] font-bold uppercase tracking-wider text-stone-400">Entrega</p><p class="mt-1 font-bold">${fmtDate($('#fecha').value)}</p></div>
-      <div class="rounded-2xl bg-sand p-3.5"><p class="text-[11px] font-bold uppercase tracking-wider text-stone-400">Descarga</p><p class="mt-1 font-bold">${esc($('#acceso').value)}</p></div>
-    </div>
-    <!-- phone: list -->
-    <ol class="mt-5 divide-y divide-stone-100 rounded-2xl ring-1 ring-stone-200 sm:hidden">
-      ${items.map((i, k) => `<li class="flex items-center gap-3 px-4 py-3"><span class="text-xs font-bold text-stone-400 tabular-nums">${k + 1}</span><span class="min-w-0 flex-1 text-sm font-semibold">${esc(i.name)}</span><span class="shrink-0 text-sm font-bold tabular-nums">${esc(i.qty || '—')} ${esc(i.unit)}</span></li>`).join('')}
-      <li class="flex justify-between bg-brand-50/60 px-4 py-3 text-xs font-bold text-brand-700"><span>El corralón completa</span><span>precio · flete · demora</span></li>
-    </ol>
-    <!-- desktop: table -->
-    <div class="mt-6 hidden overflow-hidden rounded-2xl ring-1 ring-stone-200 sm:block">
-      <table class="w-full text-sm">
-        <thead class="bg-brand-50 text-left text-[11px] font-bold uppercase tracking-wider text-brand-700">
-          <tr><th class="px-4 py-3">#</th><th class="px-4 py-3">Material</th><th class="px-4 py-3 text-right">Cantidad</th><th class="bg-brand-600 px-4 py-3 text-right">Precio unit.</th></tr>
-        </thead>
-        <tbody class="divide-y divide-stone-100">
-          ${items.map((i, k) => `<tr><td class="px-4 py-3 font-bold text-stone-400 tabular-nums">${k + 1}</td><td class="px-4 py-3 font-semibold">${esc(i.name)}</td><td class="px-4 py-3 text-right font-bold tabular-nums">${esc(i.qty || '—')} ${esc(i.unit)}</td><td class="bg-brand-50/60 px-4 py-3 text-right">${blank}</td></tr>`).join('')}
-        </tbody>
-        <tfoot class="border-t-2 border-stone-200">
-          <tr><td colspan="3" class="px-4 py-3 text-right font-bold">Flete</td><td class="bg-brand-50/60 px-4 py-3 text-right">${blank}</td></tr>
-          <tr><td colspan="3" class="px-4 py-3 text-right font-bold">Tiempo de entrega</td><td class="bg-brand-50/60 px-4 py-3 text-right text-brand-400">______</td></tr>
-        </tfoot>
-      </table>
-    </div>
+    <section class="overflow-hidden rounded-2xl bg-white ring-1 ring-stone-200">
+      <header class="flex flex-wrap items-end justify-between gap-3 border-b border-stone-200 bg-stone-50 px-4 py-4 sm:px-6">
+        <div>
+          <p class="text-[11px] font-bold uppercase tracking-[.14em] text-stone-500">Pedido de cotización</p>
+          <p class="mt-0.5 text-lg font-black tracking-tight">${sent ? esc(sent.id) : 'Borrador'}</p>
+        </div>
+        <p class="text-xs font-semibold text-stone-500">${items.length} material${items.length === 1 ? '' : 'es'} · enviado por CotizaObra</p>
+      </header>
+      <dl class="grid grid-cols-2 gap-x-6 gap-y-4 border-b border-dashed border-stone-200 px-4 py-4 text-sm sm:grid-cols-4 sm:px-6 ${obraElegida() ? 'lg:grid-cols-5' : ''}">
+        ${[['user', 'Solicitante', TIPO_LABEL[currentTipo()] + empresa], ...(obraElegida() ? [['briefcase', 'Para', esc(obraElegida().nombre) + (obraElegida().ref ? `<span class="block text-xs font-semibold text-stone-500">${esc(obraElegida().ref)}</span>` : '')]] : []), ['map-pin', 'Obra', esc(loc)], ['calendar', 'Entrega', fmtDate($('#fecha').value)], ['truck', 'Descarga', esc($('#acceso').value)]].map(([ic, l, v]) => `
+        <div class="min-w-0"><dt class="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-stone-500"><i data-lucide="${ic}" class="h-3.5 w-3.5"></i>${l}</dt><dd class="mt-1 font-bold leading-snug">${v}</dd></div>`).join('')}
+      </dl>
+      <div class="hidden grid-cols-[2.25rem_1fr_7.5rem_9.5rem] items-center gap-3 border-b border-stone-100 px-6 py-2.5 text-[11px] font-bold uppercase tracking-wider text-stone-500 sm:grid">
+        <span>#</span><span>Material</span><span class="text-right">Cantidad</span><span class="flex items-center justify-end gap-1 text-sky-800"><i data-lucide="pencil" class="h-3 w-3"></i>Precio unit.</span>
+      </div>
+      <ol class="divide-y divide-stone-100">
+        ${items.map((i, k) => `<li class="grid grid-cols-[1.75rem_1fr_auto] items-center gap-x-3 gap-y-1.5 px-4 py-3 sm:grid-cols-[2.25rem_1fr_7.5rem_9.5rem] sm:px-6">
+          <span class="text-xs font-bold tabular-nums text-stone-500">${k + 1}</span>
+          <span class="min-w-0 text-sm font-semibold leading-snug">${esc(i.name)}</span>
+          <span class="text-right text-sm font-bold tabular-nums">${esc(i.qty || '—')} <span class="font-semibold text-stone-500">${esc(i.unit)}</span></span>
+          <span class="col-start-2 col-end-4 flex justify-end sm:col-auto">${casillero('$')}</span>
+        </li>`).join('')}
+      </ol>
+      <div class="space-y-2.5 border-t border-stone-200 bg-stone-50/60 px-4 py-4 sm:px-6">
+        <div class="flex items-center justify-end gap-3 text-sm"><span class="font-bold">Flete</span>${casillero('$')}</div>
+        <div class="flex items-center justify-end gap-3 text-sm"><span class="font-bold">Tiempo de entrega</span>${casillero('', 'ej. 48 h')}</div>
+      </div>
+      <p class="flex items-start gap-2 border-t border-sky-100 bg-sky-50 px-4 py-3 text-xs leading-relaxed text-sky-900 sm:px-6"><i data-lucide="info" class="mt-px h-4 w-4 shrink-0 text-sky-700"></i>El corralón solo completa los casilleros azules: precio por unidad, flete y tiempo de entrega.</p>
+    </section>
     ${$('#notas').value.trim() ? `<p class="mt-4 rounded-2xl bg-amber-50 p-4 text-sm text-amber-900"><span class="font-bold">Notas:</span> ${esc($('#notas').value.trim())}</p>` : ''}
     <p class="mt-4 flex items-center gap-2 text-xs text-stone-400"><i data-lucide="lock" class="h-4 w-4"></i>Tus datos de contacto se revelan al corralón solo cuando aceptás su presupuesto.</p>
     <div class="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
@@ -1536,8 +1580,10 @@ $('#quoteForm').addEventListener('submit', e => {
     if (known) existed = true;
     else pin = CO.clienteRegistrar({ nombre, apellido, email }).pin;
   }
+  const ob = obraElegida();
+  const obra = ob ? CO.guardarObra(Object.assign({}, ob, { email })) : null;
   const pedidoNuevo = CO.crearPedido({
-    tipo: currentTipo(),
+    tipo: currentTipo(), obra: obra ? { id: obra.id, nombre: obra.nombre, ref: obra.ref || '' } : null,
     cliente: { nombre, apellido, email, telefono: $('#telefono').value.trim(), empresa: currentTipo() !== 'particular' ? $('#empresa').value.trim() : '' },
     items: getItems().filter(i => i.name && i.qty).map(({ name, qty, unit }) => ({ name, qty, unit })),
     provincia: $('#provincia').value, localidad: $('#localidad').value.trim(), direccion: $('#direccion').value.trim(),
@@ -1545,7 +1591,7 @@ $('#quoteForm').addEventListener('submit', e => {
   });
   openOrder({ id: pedidoNuevo.id, pin, existed, email, nombre, dest: CO.destinatarios(pedidoNuevo).length });
   toast('Pedido enviado', { type: 'success', desc: `${pedidoNuevo.id} · te avisamos cuando lleguen los presupuestos.` });
-  clearDraft(); refreshWho();
+  clearDraft(); refreshWho(); obraNueva = false; $('#obraNombre').value = ''; $('#obraRef').value = ''; if (currentTipo() !== 'particular') { paintObras(obra && obra.id); setObraNueva(false); }
 });
 
 /* ---------- Logged-in client ---------- */
@@ -1558,6 +1604,12 @@ function refreshWho() {
     if (!$('#nombre').value) $('#nombre').value = c.nombre;
     if (!$('#apellido').value) $('#apellido').value = c.apellido;
     if (!$('#email').value) $('#email').value = c.email;
+    // datos de tu último pedido: teléfono y empresa
+    const ult = CO.pedidosDeCliente(c.email).concat(CO.pedidosArchivados(c.email)).sort((a, b) => b.createdAt - a.createdAt)[0];
+    if (ult && ult.cliente) {
+      if (!$('#telefono').value && ult.cliente.telefono) $('#telefono').value = ult.cliente.telefono;
+      if (!$('#empresa').value && ult.cliente.empresa) $('#empresa').value = ult.cliente.empresa;
+    }
   }
 }
 $('#notMe').addEventListener('click', () => {
@@ -1660,6 +1712,8 @@ $('#fecha').min = today.toISOString().slice(0, 10);
     loadItems(rep.items, true);
     const r = $(`input[name=tipo][value=${rep.tipo}]`); if (r) r.checked = true;
     ['provincia', 'localidad', 'direccion', 'acceso'].forEach(k => { if (rep[k]) $('#' + k).value = rep[k]; });
+    if (rep.cliente && rep.cliente.empresa) $('#empresa').value = rep.cliente.empresa;
+    if (rep.obra) { onTipo(); paintObras(rep.obra.id); setObraNueva(false); }
     $('#fecha').value = '';
     try { history.replaceState(null, '', location.pathname); } catch (e) { /* dentro de la app no hay dirección que limpiar */ }
   }

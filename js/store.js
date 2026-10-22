@@ -12,7 +12,7 @@
 (function () {
   const KEY = 'cotizaobra:db:v2';
   const SESSION_KEY = tipo => 'cotizaobra:sesion:' + tipo;   // una sesión por rol: cliente y corralón
-  const EMPTY = () => ({ clientes: [], corralones: [], pedidos: [], listas: [], seq: 123 });
+  const EMPTY = () => ({ clientes: [], corralones: [], pedidos: [], listas: [], obras: [], seq: 123 });
 
   /* ---------- storage ---------- */
   function db() {
@@ -290,6 +290,22 @@
   const pedido = id => db().pedidos.find(p => p.id === id) || null;
   const pedidosDeCliente = email => db().pedidos.filter(p => p.cliente && p.cliente.email === normEmail(email) && !p.archivado);
   // Sin compra: se borra para todos. Con compra: se archiva (el corralón conserva su venta).
+  /* ---------- clientes / obras de constructoras y estudios ---------- */
+  const obrasDe = email => { const em = normEmail(email); return (db().obras || []).filter(o => !o.email || (em && o.email === em)).sort((a, b) => (b.usado || 0) - (a.usado || 0)); };
+  function guardarObra({ id, nombre, ref, email }) {
+    let out = null;
+    const d = db(); d.obras = d.obras || [];
+    const em = normEmail(email) || null, nn = String(nombre || '').trim();
+    let o = id ? d.obras.find(x => x.id === id) : d.obras.find(x => norm(x.nombre) === norm(nn) && (!x.email || x.email === em));
+    if (!o) { o = { id: 'O' + (hashStr(nn + now()) % 100000), nombre: nn, ref: String(ref || '').trim(), email: em, createdAt: now() }; d.obras.push(o); }
+    if (em && !o.email) o.email = em;
+    if (ref != null && String(ref).trim()) o.ref = String(ref).trim();
+    o.usado = now(); out = Object.assign({}, o); commit(d);
+    return out;
+  }
+  const borrarObra = id => { const d = db(); d.obras = (d.obras || []).filter(o => o.id !== id); commit(d); };
+  const pedidosArchivados = email => db().pedidos.filter(p => p.cliente && p.cliente.email === normEmail(email) && p.archivado);
+  const desarchivarPedido = id => mutarPedido(id, p => { delete p.archivado; });
   function borrarPedido(id) {
     const d = db(), i = d.pedidos.findIndex(x => x.id === id); if (i < 0) return null;
     const p = d.pedidos[i];
@@ -711,6 +727,6 @@
     crearPedido, pedido, pedidosDeCliente, destinatarios, respuestas, estado, contactoCorralon, nombreCorralon, adjudicados,
     combinacionOptima, evaluarAsignacion, adjudicar, parteDe, entregaEstado, avanzarEntrega, confirmarRecepcion, calificar, rating,
     hilo, enviarMensaje, marcarLeido, noLeidos,
-    pedidosParaCorralon, respuestaDe, responder, adheridos, perfilPublico, app, borrarPedido, restaurarPedido, PLAZO_H, cierre, abierto, restante, fmtRestante, cerrarPedido, datosZona, pedidoDePrueba, decorarHeader
+    pedidosParaCorralon, respuestaDe, responder, adheridos, perfilPublico, app, borrarPedido, restaurarPedido, obrasDe, guardarObra, borrarObra, pedidosArchivados, desarchivarPedido, PLAZO_H, cierre, abierto, restante, fmtRestante, cerrarPedido, datosZona, pedidoDePrueba, decorarHeader
   };
 })();
