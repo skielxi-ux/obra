@@ -1,0 +1,1679 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#dc2626" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="CotizaObra" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Pedir cotización — CotizaObra</title>
+  <meta name="description" content="Cargá tu lista de materiales con sus cantidades y recibí presupuestos de los corralones adheridos de tu zona." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Montserrat', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+          colors: {
+            brand: {
+              50: '#fef2f2', 100: '#fee2e2', 200: '#fecaca', 300: '#fca5a5', 400: '#f87171',
+              500: '#ef4444', 600: '#dc2626', 700: '#b91c1c', 800: '#991b1b', 900: '#7f1d1d'
+            },
+            ink: { DEFAULT: '#151515', 2: '#222222' },
+            sand: '#f2f2f2'
+          },
+          letterSpacing: { tightest: '-.045em' }
+        }
+      },
+      future: { hoverOnlyWhenSupported: true }
+    }
+  </script>
+
+  <style>/* Swiper 11.1.14 */
+/**
+ * Swiper 11.1.14
+ * Most modern mobile touch slider and framework with hardware accelerated transitions
+ * https://swiperjs.com
+ *
+ * Copyright 2014-2024 Vladimir Kharlampidi
+ *
+ * Released under the MIT License
+ *
+ * Released on: September 12, 2024
+ */
+
+@font-face{font-family:swiper-icons;src:url('data:application/font-woff;charset=utf-8;base64, d09GRgABAAAAAAZgABAAAAAADAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABGRlRNAAAGRAAAABoAAAAci6qHkUdERUYAAAWgAAAAIwAAACQAYABXR1BPUwAABhQAAAAuAAAANuAY7+xHU1VCAAAFxAAAAFAAAABm2fPczU9TLzIAAAHcAAAASgAAAGBP9V5RY21hcAAAAkQAAACIAAABYt6F0cBjdnQgAAACzAAAAAQAAAAEABEBRGdhc3AAAAWYAAAACAAAAAj//wADZ2x5ZgAAAywAAADMAAAD2MHtryVoZWFkAAABbAAAADAAAAA2E2+eoWhoZWEAAAGcAAAAHwAAACQC9gDzaG10eAAAAigAAAAZAAAArgJkABFsb2NhAAAC0AAAAFoAAABaFQAUGG1heHAAAAG8AAAAHwAAACAAcABAbmFtZQAAA/gAAAE5AAACXvFdBwlwb3N0AAAFNAAAAGIAAACE5s74hXjaY2BkYGAAYpf5Hu/j+W2+MnAzMYDAzaX6QjD6/4//Bxj5GA8AuRwMYGkAPywL13jaY2BkYGA88P8Agx4j+/8fQDYfA1AEBWgDAIB2BOoAeNpjYGRgYNBh4GdgYgABEMnIABJzYNADCQAACWgAsQB42mNgYfzCOIGBlYGB0YcxjYGBwR1Kf2WQZGhhYGBiYGVmgAFGBiQQkOaawtDAoMBQxXjg/wEGPcYDDA4wNUA2CCgwsAAAO4EL6gAAeNpj2M0gyAACqxgGNWBkZ2D4/wMA+xkDdgAAAHjaY2BgYGaAYBkGRgYQiAHyGMF8FgYHIM3DwMHABGQrMOgyWDLEM1T9/w8UBfEMgLzE////P/5//f/V/xv+r4eaAAeMbAxwIUYmIMHEgKYAYjUcsDAwsLKxc3BycfPw8jEQA/gZBASFhEVExcQlJKWkZWTl5BUUlZRVVNXUNTQZBgMAAMR+E+gAEQFEAAAAKgAqACoANAA+AEgAUgBcAGYAcAB6AIQAjgCYAKIArAC2AMAAygDUAN4A6ADyAPwBBgEQARoBJAEuATgBQgFMAVYBYAFqAXQBfgGIAZIBnAGmAbIBzgHsAAB42u2NMQ6CUAyGW568x9AneYYgm4MJbhKFaExIOAVX8ApewSt4Bic4AfeAid3VOBixDxfPYEza5O+Xfi04YADggiUIULCuEJK8VhO4bSvpdnktHI5QCYtdi2sl8ZnXaHlqUrNKzdKcT8cjlq+rwZSvIVczNiezsfnP/uznmfPFBNODM2K7MTQ45YEAZqGP81AmGGcF3iPqOop0r1SPTaTbVkfUe4HXj97wYE+yNwWYxwWu4v1ugWHgo3S1XdZEVqWM7ET0cfnLGxWfkgR42o2PvWrDMBSFj/IHLaF0zKjRgdiVMwScNRAoWUoH78Y2icB/yIY09An6AH2Bdu/UB+yxopYshQiEvnvu0dURgDt8QeC8PDw7Fpji3fEA4z/PEJ6YOB5hKh4dj3EvXhxPqH/SKUY3rJ7srZ4FZnh1PMAtPhwP6fl2PMJMPDgeQ4rY8YT6Gzao0eAEA409DuggmTnFnOcSCiEiLMgxCiTI6Cq5DZUd3Qmp10vO0LaLTd2cjN4fOumlc7lUYbSQcZFkutRG7g6JKZKy0RmdLY680CDnEJ+UMkpFFe1RN7nxdVpXrC4aTtnaurOnYercZg2YVmLN/d/gczfEimrE/fs/bOuq29Zmn8tloORaXgZgGa78yO9/cnXm2BpaGvq25Dv9S4E9+5SIc9PqupJKhYFSSl47+Qcr1mYNAAAAeNptw0cKwkAAAMDZJA8Q7OUJvkLsPfZ6zFVERPy8qHh2YER+3i/BP83vIBLLySsoKimrqKqpa2hp6+jq6RsYGhmbmJqZSy0sraxtbO3sHRydnEMU4uR6yx7JJXveP7WrDycAAAAAAAH//wACeNpjYGRgYOABYhkgZgJCZgZNBkYGLQZtIJsFLMYAAAw3ALgAeNolizEKgDAQBCchRbC2sFER0YD6qVQiBCv/H9ezGI6Z5XBAw8CBK/m5iQQVauVbXLnOrMZv2oLdKFa8Pjuru2hJzGabmOSLzNMzvutpB3N42mNgZGBg4GKQYzBhYMxJLMlj4GBgAYow/P/PAJJhLM6sSoWKfWCAAwDAjgbRAAB42mNgYGBkAIIbCZo5IPrmUn0hGA0AO8EFTQAA');font-weight:400;font-style:normal}:root{--swiper-theme-color:#007aff}:host{position:relative;display:block;margin-left:auto;margin-right:auto;z-index:1}.swiper{margin-left:auto;margin-right:auto;position:relative;overflow:hidden;list-style:none;padding:0;z-index:1;display:block}.swiper-vertical>.swiper-wrapper{flex-direction:column}.swiper-wrapper{position:relative;width:100%;height:100%;z-index:1;display:flex;transition-property:transform;transition-timing-function:var(--swiper-wrapper-transition-timing-function,initial);box-sizing:content-box}.swiper-android .swiper-slide,.swiper-ios .swiper-slide,.swiper-wrapper{transform:translate3d(0px,0,0)}.swiper-horizontal{touch-action:pan-y}.swiper-vertical{touch-action:pan-x}.swiper-slide{flex-shrink:0;width:100%;height:100%;position:relative;transition-property:transform;display:block}.swiper-slide-invisible-blank{visibility:hidden}.swiper-autoheight,.swiper-autoheight .swiper-slide{height:auto}.swiper-autoheight .swiper-wrapper{align-items:flex-start;transition-property:transform,height}.swiper-backface-hidden .swiper-slide{transform:translateZ(0);-webkit-backface-visibility:hidden;backface-visibility:hidden}.swiper-3d.swiper-css-mode .swiper-wrapper{perspective:1200px}.swiper-3d .swiper-wrapper{transform-style:preserve-3d}.swiper-3d{perspective:1200px}.swiper-3d .swiper-cube-shadow,.swiper-3d .swiper-slide{transform-style:preserve-3d}.swiper-css-mode>.swiper-wrapper{overflow:auto;scrollbar-width:none;-ms-overflow-style:none}.swiper-css-mode>.swiper-wrapper::-webkit-scrollbar{display:none}.swiper-css-mode>.swiper-wrapper>.swiper-slide{scroll-snap-align:start start}.swiper-css-mode.swiper-horizontal>.swiper-wrapper{scroll-snap-type:x mandatory}.swiper-css-mode.swiper-vertical>.swiper-wrapper{scroll-snap-type:y mandatory}.swiper-css-mode.swiper-free-mode>.swiper-wrapper{scroll-snap-type:none}.swiper-css-mode.swiper-free-mode>.swiper-wrapper>.swiper-slide{scroll-snap-align:none}.swiper-css-mode.swiper-centered>.swiper-wrapper::before{content:'';flex-shrink:0;order:9999}.swiper-css-mode.swiper-centered>.swiper-wrapper>.swiper-slide{scroll-snap-align:center center;scroll-snap-stop:always}.swiper-css-mode.swiper-centered.swiper-horizontal>.swiper-wrapper>.swiper-slide:first-child{margin-inline-start:var(--swiper-centered-offset-before)}.swiper-css-mode.swiper-centered.swiper-horizontal>.swiper-wrapper::before{height:100%;min-height:1px;width:var(--swiper-centered-offset-after)}.swiper-css-mode.swiper-centered.swiper-vertical>.swiper-wrapper>.swiper-slide:first-child{margin-block-start:var(--swiper-centered-offset-before)}.swiper-css-mode.swiper-centered.swiper-vertical>.swiper-wrapper::before{width:100%;min-width:1px;height:var(--swiper-centered-offset-after)}.swiper-3d .swiper-slide-shadow,.swiper-3d .swiper-slide-shadow-bottom,.swiper-3d .swiper-slide-shadow-left,.swiper-3d .swiper-slide-shadow-right,.swiper-3d .swiper-slide-shadow-top{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:10}.swiper-3d .swiper-slide-shadow{background:rgba(0,0,0,.15)}.swiper-3d .swiper-slide-shadow-left{background-image:linear-gradient(to left,rgba(0,0,0,.5),rgba(0,0,0,0))}.swiper-3d .swiper-slide-shadow-right{background-image:linear-gradient(to right,rgba(0,0,0,.5),rgba(0,0,0,0))}.swiper-3d .swiper-slide-shadow-top{background-image:linear-gradient(to top,rgba(0,0,0,.5),rgba(0,0,0,0))}.swiper-3d .swiper-slide-shadow-bottom{background-image:linear-gradient(to bottom,rgba(0,0,0,.5),rgba(0,0,0,0))}.swiper-lazy-preloader{width:42px;height:42px;position:absolute;left:50%;top:50%;margin-left:-21px;margin-top:-21px;z-index:10;transform-origin:50%;box-sizing:border-box;border:4px solid var(--swiper-preloader-color,var(--swiper-theme-color));border-radius:50%;border-top-color:transparent}.swiper-watch-progress .swiper-slide-visible .swiper-lazy-preloader,.swiper:not(.swiper-watch-progress) .swiper-lazy-preloader{animation:swiper-preloader-spin 1s infinite linear}.swiper-lazy-preloader-white{--swiper-preloader-color:#fff}.swiper-lazy-preloader-black{--swiper-preloader-color:#000}@keyframes swiper-preloader-spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}.swiper-virtual .swiper-slide{-webkit-backface-visibility:hidden;transform:translateZ(0)}.swiper-virtual.swiper-css-mode .swiper-wrapper::after{content:'';position:absolute;left:0;top:0;pointer-events:none}.swiper-virtual.swiper-css-mode.swiper-horizontal .swiper-wrapper::after{height:1px;width:var(--swiper-virtual-size)}.swiper-virtual.swiper-css-mode.swiper-vertical .swiper-wrapper::after{width:1px;height:var(--swiper-virtual-size)}:root{--swiper-navigation-size:44px}.swiper-button-next,.swiper-button-prev{position:absolute;top:var(--swiper-navigation-top-offset,50%);width:calc(var(--swiper-navigation-size)/ 44 * 27);height:var(--swiper-navigation-size);margin-top:calc(0px - (var(--swiper-navigation-size)/ 2));z-index:10;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--swiper-navigation-color,var(--swiper-theme-color))}.swiper-button-next.swiper-button-disabled,.swiper-button-prev.swiper-button-disabled{opacity:.35;cursor:auto;pointer-events:none}.swiper-button-next.swiper-button-hidden,.swiper-button-prev.swiper-button-hidden{opacity:0;cursor:auto;pointer-events:none}.swiper-navigation-disabled .swiper-button-next,.swiper-navigation-disabled .swiper-button-prev{display:none!important}.swiper-button-next svg,.swiper-button-prev svg{width:100%;height:100%;object-fit:contain;transform-origin:center}.swiper-rtl .swiper-button-next svg,.swiper-rtl .swiper-button-prev svg{transform:rotate(180deg)}.swiper-button-prev,.swiper-rtl .swiper-button-next{left:var(--swiper-navigation-sides-offset,10px);right:auto}.swiper-button-next,.swiper-rtl .swiper-button-prev{right:var(--swiper-navigation-sides-offset,10px);left:auto}.swiper-button-lock{display:none}.swiper-button-next:after,.swiper-button-prev:after{font-family:swiper-icons;font-size:var(--swiper-navigation-size);text-transform:none!important;letter-spacing:0;font-variant:initial;line-height:1}.swiper-button-prev:after,.swiper-rtl .swiper-button-next:after{content:'prev'}.swiper-button-next,.swiper-rtl .swiper-button-prev{right:var(--swiper-navigation-sides-offset,10px);left:auto}.swiper-button-next:after,.swiper-rtl .swiper-button-prev:after{content:'next'}.swiper-pagination{position:absolute;text-align:center;transition:.3s opacity;transform:translate3d(0,0,0);z-index:10}.swiper-pagination.swiper-pagination-hidden{opacity:0}.swiper-pagination-disabled>.swiper-pagination,.swiper-pagination.swiper-pagination-disabled{display:none!important}.swiper-horizontal>.swiper-pagination-bullets,.swiper-pagination-bullets.swiper-pagination-horizontal,.swiper-pagination-custom,.swiper-pagination-fraction{bottom:var(--swiper-pagination-bottom,8px);top:var(--swiper-pagination-top,auto);left:0;width:100%}.swiper-pagination-bullets-dynamic{overflow:hidden;font-size:0}.swiper-pagination-bullets-dynamic .swiper-pagination-bullet{transform:scale(.33);position:relative}.swiper-pagination-bullets-dynamic .swiper-pagination-bullet-active{transform:scale(1)}.swiper-pagination-bullets-dynamic .swiper-pagination-bullet-active-main{transform:scale(1)}.swiper-pagination-bullets-dynamic .swiper-pagination-bullet-active-prev{transform:scale(.66)}.swiper-pagination-bullets-dynamic .swiper-pagination-bullet-active-prev-prev{transform:scale(.33)}.swiper-pagination-bullets-dynamic .swiper-pagination-bullet-active-next{transform:scale(.66)}.swiper-pagination-bullets-dynamic .swiper-pagination-bullet-active-next-next{transform:scale(.33)}.swiper-pagination-bullet{width:var(--swiper-pagination-bullet-width,var(--swiper-pagination-bullet-size,8px));height:var(--swiper-pagination-bullet-height,var(--swiper-pagination-bullet-size,8px));display:inline-block;border-radius:var(--swiper-pagination-bullet-border-radius,50%);background:var(--swiper-pagination-bullet-inactive-color,#000);opacity:var(--swiper-pagination-bullet-inactive-opacity, .2)}button.swiper-pagination-bullet{border:none;margin:0;padding:0;box-shadow:none;-webkit-appearance:none;appearance:none}.swiper-pagination-clickable .swiper-pagination-bullet{cursor:pointer}.swiper-pagination-bullet:only-child{display:none!important}.swiper-pagination-bullet-active{opacity:var(--swiper-pagination-bullet-opacity, 1);background:var(--swiper-pagination-color,var(--swiper-theme-color))}.swiper-pagination-vertical.swiper-pagination-bullets,.swiper-vertical>.swiper-pagination-bullets{right:var(--swiper-pagination-right,8px);left:var(--swiper-pagination-left,auto);top:50%;transform:translate3d(0px,-50%,0)}.swiper-pagination-vertical.swiper-pagination-bullets .swiper-pagination-bullet,.swiper-vertical>.swiper-pagination-bullets .swiper-pagination-bullet{margin:var(--swiper-pagination-bullet-vertical-gap,6px) 0;display:block}.swiper-pagination-vertical.swiper-pagination-bullets.swiper-pagination-bullets-dynamic,.swiper-vertical>.swiper-pagination-bullets.swiper-pagination-bullets-dynamic{top:50%;transform:translateY(-50%);width:8px}.swiper-pagination-vertical.swiper-pagination-bullets.swiper-pagination-bullets-dynamic .swiper-pagination-bullet,.swiper-vertical>.swiper-pagination-bullets.swiper-pagination-bullets-dynamic .swiper-pagination-bullet{display:inline-block;transition:.2s transform,.2s top}.swiper-horizontal>.swiper-pagination-bullets .swiper-pagination-bullet,.swiper-pagination-horizontal.swiper-pagination-bullets .swiper-pagination-bullet{margin:0 var(--swiper-pagination-bullet-horizontal-gap,4px)}.swiper-horizontal>.swiper-pagination-bullets.swiper-pagination-bullets-dynamic,.swiper-pagination-horizontal.swiper-pagination-bullets.swiper-pagination-bullets-dynamic{left:50%;transform:translateX(-50%);white-space:nowrap}.swiper-horizontal>.swiper-pagination-bullets.swiper-pagination-bullets-dynamic .swiper-pagination-bullet,.swiper-pagination-horizontal.swiper-pagination-bullets.swiper-pagination-bullets-dynamic .swiper-pagination-bullet{transition:.2s transform,.2s left}.swiper-horizontal.swiper-rtl>.swiper-pagination-bullets-dynamic .swiper-pagination-bullet{transition:.2s transform,.2s right}.swiper-pagination-fraction{color:var(--swiper-pagination-fraction-color,inherit)}.swiper-pagination-progressbar{background:var(--swiper-pagination-progressbar-bg-color,rgba(0,0,0,.25));position:absolute}.swiper-pagination-progressbar .swiper-pagination-progressbar-fill{background:var(--swiper-pagination-color,var(--swiper-theme-color));position:absolute;left:0;top:0;width:100%;height:100%;transform:scale(0);transform-origin:left top}.swiper-rtl .swiper-pagination-progressbar .swiper-pagination-progressbar-fill{transform-origin:right top}.swiper-horizontal>.swiper-pagination-progressbar,.swiper-pagination-progressbar.swiper-pagination-horizontal,.swiper-pagination-progressbar.swiper-pagination-vertical.swiper-pagination-progressbar-opposite,.swiper-vertical>.swiper-pagination-progressbar.swiper-pagination-progressbar-opposite{width:100%;height:var(--swiper-pagination-progressbar-size,4px);left:0;top:0}.swiper-horizontal>.swiper-pagination-progressbar.swiper-pagination-progressbar-opposite,.swiper-pagination-progressbar.swiper-pagination-horizontal.swiper-pagination-progressbar-opposite,.swiper-pagination-progressbar.swiper-pagination-vertical,.swiper-vertical>.swiper-pagination-progressbar{width:var(--swiper-pagination-progressbar-size,4px);height:100%;left:0;top:0}.swiper-pagination-lock{display:none}.swiper-scrollbar{border-radius:var(--swiper-scrollbar-border-radius,10px);position:relative;touch-action:none;background:var(--swiper-scrollbar-bg-color,rgba(0,0,0,.1))}.swiper-scrollbar-disabled>.swiper-scrollbar,.swiper-scrollbar.swiper-scrollbar-disabled{display:none!important}.swiper-horizontal>.swiper-scrollbar,.swiper-scrollbar.swiper-scrollbar-horizontal{position:absolute;left:var(--swiper-scrollbar-sides-offset,1%);bottom:var(--swiper-scrollbar-bottom,4px);top:var(--swiper-scrollbar-top,auto);z-index:50;height:var(--swiper-scrollbar-size,4px);width:calc(100% - 2 * var(--swiper-scrollbar-sides-offset,1%))}.swiper-scrollbar.swiper-scrollbar-vertical,.swiper-vertical>.swiper-scrollbar{position:absolute;left:var(--swiper-scrollbar-left,auto);right:var(--swiper-scrollbar-right,4px);top:var(--swiper-scrollbar-sides-offset,1%);z-index:50;width:var(--swiper-scrollbar-size,4px);height:calc(100% - 2 * var(--swiper-scrollbar-sides-offset,1%))}.swiper-scrollbar-drag{height:100%;width:100%;position:relative;background:var(--swiper-scrollbar-drag-bg-color,rgba(0,0,0,.5));border-radius:var(--swiper-scrollbar-border-radius,10px);left:0;top:0}.swiper-scrollbar-cursor-drag{cursor:move}.swiper-scrollbar-lock{display:none}.swiper-zoom-container{width:100%;height:100%;display:flex;justify-content:center;align-items:center;text-align:center}.swiper-zoom-container>canvas,.swiper-zoom-container>img,.swiper-zoom-container>svg{max-width:100%;max-height:100%;object-fit:contain}.swiper-slide-zoomed{cursor:move;touch-action:none}.swiper .swiper-notification{position:absolute;left:0;top:0;pointer-events:none;opacity:0;z-index:-1000}.swiper-free-mode>.swiper-wrapper{transition-timing-function:ease-out;margin:0 auto}.swiper-grid>.swiper-wrapper{flex-wrap:wrap}.swiper-grid-column>.swiper-wrapper{flex-wrap:wrap;flex-direction:column}.swiper-fade.swiper-free-mode .swiper-slide{transition-timing-function:ease-out}.swiper-fade .swiper-slide{pointer-events:none;transition-property:opacity}.swiper-fade .swiper-slide .swiper-slide{pointer-events:none}.swiper-fade .swiper-slide-active{pointer-events:auto}.swiper-fade .swiper-slide-active .swiper-slide-active{pointer-events:auto}.swiper.swiper-cube{overflow:visible}.swiper-cube .swiper-slide{pointer-events:none;-webkit-backface-visibility:hidden;backface-visibility:hidden;z-index:1;visibility:hidden;transform-origin:0 0;width:100%;height:100%}.swiper-cube .swiper-slide .swiper-slide{pointer-events:none}.swiper-cube.swiper-rtl .swiper-slide{transform-origin:100% 0}.swiper-cube .swiper-slide-active,.swiper-cube .swiper-slide-active .swiper-slide-active{pointer-events:auto}.swiper-cube .swiper-slide-active,.swiper-cube .swiper-slide-next,.swiper-cube .swiper-slide-prev{pointer-events:auto;visibility:visible}.swiper-cube .swiper-cube-shadow{position:absolute;left:0;bottom:0px;width:100%;height:100%;opacity:.6;z-index:0}.swiper-cube .swiper-cube-shadow:before{content:'';background:#000;position:absolute;left:0;top:0;bottom:0;right:0;filter:blur(50px)}.swiper-cube .swiper-slide-next+.swiper-slide{pointer-events:auto;visibility:visible}.swiper-cube .swiper-slide-shadow-cube.swiper-slide-shadow-bottom,.swiper-cube .swiper-slide-shadow-cube.swiper-slide-shadow-left,.swiper-cube .swiper-slide-shadow-cube.swiper-slide-shadow-right,.swiper-cube .swiper-slide-shadow-cube.swiper-slide-shadow-top{z-index:0;-webkit-backface-visibility:hidden;backface-visibility:hidden}.swiper.swiper-flip{overflow:visible}.swiper-flip .swiper-slide{pointer-events:none;-webkit-backface-visibility:hidden;backface-visibility:hidden;z-index:1}.swiper-flip .swiper-slide .swiper-slide{pointer-events:none}.swiper-flip .swiper-slide-active,.swiper-flip .swiper-slide-active .swiper-slide-active{pointer-events:auto}.swiper-flip .swiper-slide-shadow-flip.swiper-slide-shadow-bottom,.swiper-flip .swiper-slide-shadow-flip.swiper-slide-shadow-left,.swiper-flip .swiper-slide-shadow-flip.swiper-slide-shadow-right,.swiper-flip .swiper-slide-shadow-flip.swiper-slide-shadow-top{z-index:0;-webkit-backface-visibility:hidden;backface-visibility:hidden}.swiper-creative .swiper-slide{-webkit-backface-visibility:hidden;backface-visibility:hidden;overflow:hidden;transition-property:transform,opacity,height}.swiper.swiper-cards{overflow:visible}.swiper-cards .swiper-slide{transform-origin:center bottom;-webkit-backface-visibility:hidden;backface-visibility:hidden;overflow:hidden}
+  </style>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-size: 16px; }
+    #siteHeader { padding-top: env(safe-area-inset-top, 0px); }
+    body { font-family: 'Montserrat', sans-serif; }
+
+    /* Easing tokens (Emil Kowalski) */
+    :root {
+      --ease-out: cubic-bezier(.23, 1, .32, 1);
+      --ease-in-out: cubic-bezier(.77, 0, .175, 1);
+      --ease-drawer: cubic-bezier(.32, .72, 0, 1);
+    }
+
+    /* Header (solid brand) */
+    #siteHeader { transition: box-shadow .3s var(--ease-out), background-color .3s var(--ease-out); }
+    #siteHeader.scrolled { box-shadow: 0 12px 30px -14px rgba(127,29,29,.55); background-color: rgba(220,38,38,.96); backdrop-filter: blur(10px); }
+    .nav-link { position: relative; color: rgba(255,255,255,.85); transition: color .2s var(--ease-out); }
+    .nav-link::after { content: ''; position: absolute; left: 0; right: 0; bottom: -6px; height: 2px; border-radius: 2px; background: #fff; transform: scaleX(0); transform-origin: right; transition: transform .35s var(--ease-out); }
+    @media (hover: hover) and (pointer: fine) {
+      .nav-link:hover { color: #fff; }
+      .nav-link:hover::after { transform: scaleX(1); transform-origin: left; }
+    }
+
+    /* Press feedback on every button */
+    :is(button, a.rounded-full):not(.no-press) { transition: transform .16s var(--ease-out), background-color .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease, opacity .2s ease; }
+    :is(button, a.rounded-full):not(.no-press):active { transform: scale(.97); }
+
+    /* Sonner-style toaster */
+    #toaster { position: fixed; z-index: 80; bottom: 24px; right: 24px; width: 356px; margin: 0; padding: 0; list-style: none; height: 0; transition: height .4s var(--ease-out); }
+    @media (max-width: 639px) { #toaster { left: 16px; right: 16px; width: auto; bottom: 16px; } }
+    .s-toast { position: absolute; left: 0; right: 0; bottom: 0; display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; border-radius: 16px; background: #fff; border: 1px solid #ededed; box-shadow: 0 10px 30px -10px rgba(0,0,0,.25); font-size: 13px; line-height: 1.35; transform-origin: 50% 100%; transition: transform .4s var(--ease-out), opacity .4s var(--ease-out), height .4s var(--ease-out); touch-action: none; user-select: none; overflow: hidden; cursor: grab; will-change: transform; }
+    .s-toast:active { cursor: grabbing; }
+    .s-toast .t-title { font-weight: 700; color: #151515; }
+    .s-toast .t-desc { margin-top: 2px; color: #57524d; }
+    .s-toast .t-icon { flex-shrink: 0; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 999px; margin-top: -1px; }
+
+    /* Vaul-style drawers */
+    #sheetOverlay { opacity: 0; pointer-events: none; transition: opacity .5s var(--ease-drawer); }
+    #sheetOverlay.show { opacity: 1; pointer-events: auto; }
+    .sheet { transform: translate3d(0,100%,0); visibility: hidden; transition: transform .5s var(--ease-drawer), visibility 0s linear .5s; will-change: transform; }
+    .sheet.open { transform: translate3d(0,0,0); visibility: visible; transition: transform .5s var(--ease-drawer), visibility 0s; }
+    [data-drag] { touch-action: none; cursor: grab; }
+    @media (min-width: 640px) {
+      .modal-sheet { left: 50% !important; right: auto !important; top: 50%; bottom: auto !important; transform: translate3d(-50%,-47%,0) scale(.96); opacity: 0; pointer-events: none; transition: transform .35s var(--ease-out), opacity .25s ease, visibility 0s linear .35s; }
+      .modal-sheet.open { transform: translate3d(-50%,-50%,0) scale(1); opacity: 1; pointer-events: auto; transition: transform .35s var(--ease-out), opacity .25s ease, visibility 0s; }
+      .modal-sheet [data-drag] { cursor: default; }
+    }
+    #page { background: #fff; overflow-x: clip; transition: transform .5s var(--ease-drawer), border-radius .5s var(--ease-drawer); }
+    body.sheet-open { background: #000; }
+    body.sheet-open #page { transform: scale(.94) translate3d(0,14px,0); border-radius: 20px; overflow: hidden; }
+
+    /* Image fallback tone */
+    .ph { background-color: #1c1917; background-image: radial-gradient(circle at 78% 18%, rgba(220,38,38,.38), transparent 58%), linear-gradient(160deg, #2b2724, #121212); background-size: cover; background-position: center; }
+    .ph-icon { position: absolute; inset: 0; margin: auto; width: 56px; height: 56px; color: rgba(255,255,255,.55); pointer-events: none; }
+    .ph.loaded + .ph-icon { display: none; }
+
+    /* Reveal */
+    [data-reveal] { opacity: 0; transform: translateY(24px); filter: blur(8px); transition: opacity .9s var(--ease-out), transform .9s var(--ease-out), filter .9s var(--ease-out); }
+    [data-reveal].is-visible { opacity: 1; transform: none; filter: blur(0); }
+    [data-reveal="left"] { transform: translateX(-40px); }
+    [data-reveal="right"] { transform: translateX(40px); }
+    [data-reveal="zoom"] { transform: scale(.95); }
+
+    /* Hero */
+    .hero-zoom { animation: heroZoom 18s ease-out forwards; }
+    @keyframes heroZoom { from { transform: scale(1.12); } to { transform: scale(1); } }
+    .stack-line { display: block; overflow: hidden; padding-bottom: .04em; }
+    .stack-line > span { display: inline-block; transform: translateY(105%); filter: blur(10px); opacity: 0; animation: lineUp 1.1s var(--ease-out) forwards; }
+    @keyframes lineUp { to { transform: none; filter: blur(0); opacity: 1; } }
+
+    /* Image hover zoom */
+    .zoom-img img, .zoom-img .ph { transition: transform 1.2s cubic-bezier(.2,.7,.2,1); }
+    .zoom-img:hover img, .zoom-img:hover .ph { transform: scale(1.07); }
+
+    /* Motion graphic */
+    .flow-path { stroke-dasharray: 6 8; animation: dash 1.6s linear infinite; }
+    @keyframes dash { to { stroke-dashoffset: -28; } }
+    .node-badge { opacity: 0; animation: badge 6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+    @keyframes badge { 0%, 30% { opacity: 0; transform: translateY(6px) scale(.9); } 40%, 85% { opacity: 1; transform: none; } 100% { opacity: 0; transform: translateY(-4px); } }
+    .pulse-ring { animation: pulseRing 2.4s ease-out infinite; transform-box: fill-box; transform-origin: center; }
+    @keyframes pulseRing { 0% { opacity: .5; transform: scale(1); } 100% { opacity: 0; transform: scale(1.6); } }
+
+    .marquee { animation: marquee 40s linear infinite; }
+    @keyframes marquee { to { transform: translateX(-50%); } }
+
+    .step-line { transform-origin: left; transform: scaleX(0); transition: transform 1.4s cubic-bezier(.2,.7,.2,1) .2s; }
+    .is-visible .step-line { transform: scaleX(1); }
+
+    /* Swiper */
+    .swiper-pagination-bullet { background: #151515; opacity: .2; width: 10px; height: 10px; transition: all .3s; }
+    .swiper-pagination-bullet-active { background: #dc2626; opacity: 1; width: 28px; border-radius: 6px; }
+    .light-pag .swiper-pagination-bullet { background: #fff; opacity: .4; }
+    .light-pag .swiper-pagination-bullet-active { background: #dc2626; opacity: 1; }
+    .swiper-pagination { position: static !important; margin-top: 30px; }
+
+    /* Fields */
+    .field { width: 100%; border: 1.5px solid #e7e5e4; background: #fff; border-radius: .8rem; padding: .75rem .95rem; font-size: .92rem; transition: border-color .2s, box-shadow .2s; outline: none; }
+    .field:focus { border-color: #dc2626; box-shadow: 0 0 0 4px rgba(220,38,38,.12); }
+    .field.invalid { border-color: #dc2626; background: #fef2f2; }
+    .label { display: block; font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: #57534e; margin-bottom: .4rem; }
+    .seg input:checked + span { background: #dc2626; color: #fff; border-color: #dc2626; box-shadow: 0 10px 22px -10px rgba(220,38,38,.7); }
+    .chk input:checked + span { background: #fef2f2; color: #b91c1c; border-color: #fca5a5; }
+    .row-enter { animation: rowIn .35s cubic-bezier(.2,.8,.2,1); }
+    @keyframes rowIn { from { opacity: 0; transform: translateY(-8px); } }
+
+    .faq-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .35s ease; }
+    .faq-item.open .faq-body { grid-template-rows: 1fr; }
+    .faq-item.open .faq-icon { transform: rotate(45deg); background: #dc2626; color: #fff; border-color: #dc2626; }
+
+
+    /* Lucide icons */
+    .lucide { flex-shrink: 0; }
+
+    /* Auth form: outlined fields with the label on the border */
+    .fl { position: relative; }
+    .fl input { width: 100%; height: 56px; border: 1.5px solid #e7e5e4; border-radius: 12px; padding: 0 48px 0 16px; font-size: 16px; color: #151515; background: #fff; outline: none; transition: border-color .2s var(--ease-out), box-shadow .2s var(--ease-out); }
+    .fl input::placeholder { color: transparent; }
+    .fl label { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); padding: 0 4px; background: #fff; color: #6b6560; font-size: 15px; pointer-events: none; transition: top .2s var(--ease-out), font-size .2s var(--ease-out), color .2s ease; }
+    .fl input:focus { border-color: #dc2626; box-shadow: 0 0 0 4px rgba(220,38,38,.1); }
+    .fl input:focus::placeholder { color: #857f7a; }
+    .fl input:focus + label, .fl input:not(:placeholder-shown) + label { top: 0; font-size: 12px; font-weight: 600; color: #57534e; }
+    .fl input:focus + label { color: #dc2626; }
+    .fl .fl-icon { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: #6b6560; transition: color .2s ease; pointer-events: none; }
+    .fl button.fl-icon { pointer-events: auto; width: 36px; height: 36px; right: 6px; display: grid; place-items: center; border-radius: 999px; }
+    .fl input:focus ~ .fl-icon { color: #dc2626; }
+    .fl.invalid input { border-color: #dc2626; background: #fffafa; }
+    .fl.invalid label { color: #dc2626 !important; }
+    .fl-error { display: none; align-items: center; gap: 6px; margin-top: 6px; font-size: 12.5px; color: #dc2626; }
+    .fl.invalid + .fl-error { display: flex; }
+    .pw-toggle .ic-off { display: none; }
+    .pw-toggle[aria-pressed="true"] .ic-on { display: none; }
+    .pw-toggle[aria-pressed="true"] .ic-off { display: block; }
+    .strength span { flex: 1; height: 4px; border-radius: 4px; background: #e7e5e4; transition: background-color .3s var(--ease-out); }
+    .auth-view[hidden], [data-foot][hidden] { display: none !important; }
+    .auth-enter { animation: authIn .4s var(--ease-out); }
+    @keyframes authIn { from { opacity: 0; transform: translateY(8px); filter: blur(4px); } }
+    .auth-leave { opacity: 0; transform: translateY(-4px); filter: blur(2px); transition: opacity .15s ease, transform .15s ease, filter .15s ease; }
+    .auth-pag { display: flex; gap: 6px; }
+    .spinner { width: 18px; height: 18px; border-radius: 999px; border: 2.5px solid rgba(255,255,255,.35); border-top-color: #fff; animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ---- Pedir cotización ---- */
+    .field { font-size: 16px; }
+    @media (min-width: 1024px) { .field { font-size: .92rem; } }
+    .nav-link.is-active { color: #fff; }
+    .nav-link.is-active::after { transform: scaleX(1); }
+    .seg span { transition: background-color .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease; }
+    .mat-row.row-enter { animation: rowIn .35s var(--ease-out); }
+    .mat-row.row-leave { opacity: 0; transform: translateX(12px); transition: opacity .2s ease, transform .2s var(--ease-out); }
+    .ac-list { position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 30; max-height: 288px; overflow-y: auto; border-radius: 16px; background: #fff; border: 1px solid #ececec; box-shadow: 0 18px 40px -12px rgba(0,0,0,.25); padding: 6px; transform-origin: top center; animation: acIn .18s var(--ease-out); }
+    @keyframes acIn { from { opacity: 0; transform: translateY(-4px) scale(.98); } }
+    .ac-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; text-align: left; padding: 10px 12px; border-radius: 10px; font-size: 14.5px; color: #292524; cursor: pointer; }
+    .ac-item mark { background: transparent; color: #dc2626; font-weight: 800; }
+    .ac-item[aria-selected="true"] { background: #f2f2f2; }
+    .ac-item small { flex-shrink: 0; font-size: 11px; font-weight: 700; color: #6b6560; text-transform: uppercase; letter-spacing: .06em; }
+    .ac-free { font-size: 12.5px; color: #57524d; padding: 8px 12px 6px; border-top: 1px solid #f5f5f4; margin-top: 4px; }
+    .chip-add { white-space: nowrap; }
+
+    /* Vida: aparición escalonada, inclinación de tarjetas, fondos en movimiento */
+    [data-stagger] > * { opacity: 0; transform: translateY(18px); filter: blur(6px); transition: opacity .7s var(--ease-out), transform .7s var(--ease-out), filter .7s var(--ease-out); transition-delay: calc(var(--i, 0) * 90ms); }
+    [data-stagger].is-visible > * { opacity: 1; transform: none; filter: none; }
+    [data-stagger] > :nth-child(1) { --i: 0; }
+    [data-stagger] > :nth-child(2) { --i: 1; }
+    [data-stagger] > :nth-child(3) { --i: 2; }
+    [data-stagger] > :nth-child(4) { --i: 3; }
+    [data-stagger] > :nth-child(5) { --i: 4; }
+    [data-stagger] > :nth-child(6) { --i: 5; }
+    [data-stagger] > :nth-child(7) { --i: 6; }
+    [data-stagger] > :nth-child(8) { --i: 7; }
+    [data-stagger] > :nth-child(9) { --i: 8; }
+    [data-stagger] > :nth-child(10) { --i: 9; }
+    @media (hover: hover) and (pointer: fine) {
+      [data-tilt], [data-stagger].is-visible > [data-tilt] { position: relative; transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateY(var(--ty, 0px)); transition: transform .5s var(--ease-out), box-shadow .3s; will-change: transform; }
+      [data-tilt].tilting, [data-stagger].is-visible > [data-tilt].tilting { transition: transform .12s linear, box-shadow .3s; --ty: -3px; }
+      [data-tilt] .tilt-glare { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 5; opacity: 0; transition: opacity .3s; background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,.22), transparent 45%); }
+      [data-tilt].tilting .tilt-glare { opacity: 1; }
+    }
+    .bg-drift { animation: bgDrift 28s ease-in-out infinite alternate; }
+    @keyframes bgDrift { 0% { transform: scale(1.06) translate3d(0,0,0); } 50% { transform: scale(1.1) translate3d(-1.6%, -1.2%, 0); } 100% { transform: scale(1.07) translate3d(1.2%, -0.6%, 0); } }
+    .glow-blob { position: absolute; border-radius: 999px; filter: blur(70px); pointer-events: none; mix-blend-mode: screen; opacity: .45; }
+    .glow-a { width: 46vw; height: 46vw; max-width: 620px; max-height: 620px; background: radial-gradient(circle, rgba(220,38,38,.75), transparent 65%); right: -8%; top: -12%; animation: blobA 18s ease-in-out infinite alternate; }
+    .glow-b { width: 34vw; height: 34vw; max-width: 460px; max-height: 460px; background: radial-gradient(circle, rgba(251,191,36,.45), transparent 65%); left: 18%; bottom: -14%; animation: blobB 22s ease-in-out infinite alternate; }
+    @keyframes blobA { to { transform: translate3d(-12vw, 10vh, 0) scale(1.15); } }
+    @keyframes blobB { to { transform: translate3d(10vw, -8vh, 0) scale(.9); } }
+    .count-up { font-variant-numeric: tabular-nums; }
+    @media (prefers-reduced-motion: reduce) {
+      [data-stagger] > * { opacity: 1; transform: none; filter: none; transition: none; }
+      .bg-drift, .glow-blob { animation: none !important; }
+      [data-tilt] { transform: none !important; }
+    }
+    /* Legibilidad: grises más oscuros (contraste AA sobre blanco y #f2f2f2) */
+    .text-stone-300 { color: #8f8984 !important; }
+    .text-stone-400 { color: #6b6560 !important; }
+    .text-stone-500 { color: #57524d !important; }
+    .text-stone-600 { color: #45403c !important; }
+    .placeholder\:text-stone-400::placeholder, .field::placeholder, input::placeholder, textarea::placeholder { color: #857f7a !important; }
+    .text-white\/40, .text-white\/50 { color: rgba(255,255,255,.74) !important; }
+    .text-white\/60 { color: rgba(255,255,255,.8) !important; }
+    .text-white\/70 { color: rgba(255,255,255,.85) !important; }
+    .text-brand-800\/50 { color: rgba(153,27,27,.8) !important; }
+    .text-brand-700\/70 { color: #b91c1c !important; }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      [data-reveal] { opacity: 1; transform: none; filter: none; }
+      .stack-line > span { transform: none; filter: none; opacity: 1; }
+      body.sheet-open #page { transform: none; }
+    }
+  </style>
+</head>
+
+<body class="bg-white text-ink antialiased">
+
+<!-- ================= HEADER ================= -->
+<header id="siteHeader" class="fixed inset-x-0 top-0 z-50 bg-brand-600">
+  <div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:h-20 sm:px-6 lg:px-8">
+    <a href="index.html" class="flex items-center gap-2.5">
+      <span class="grid h-10 w-10 place-items-center rounded-full bg-white text-brand-600">
+        <i data-lucide="house" class="h-5 w-5"></i>
+      </span>
+      <span class="text-lg font-extrabold tracking-tight text-white">Cotiza<span class="text-ink">Obra</span></span>
+    </a>
+
+    <nav class="hidden items-center gap-9 text-sm font-semibold lg:flex">
+      <a href="index.html#como-funciona" class="nav-link">Cómo funciona</a>
+      <a href="index.html#casos" class="nav-link">Casos de uso</a>
+      <a href="adheridos.html" class="nav-link">Adheridos</a>
+      <a href="#registro" data-auth="registro" class="nav-link">Para corralones</a>
+    </nav>
+
+    <div class="hidden items-center gap-3 lg:flex">
+      <div class="relative" id="loginWrap">
+        <button type="button" id="loginBtn" class="inline-flex items-center gap-2 rounded-full border border-white/40 py-2.5 pl-4 pr-3.5 text-sm font-semibold text-white transition hover:border-white hover:bg-white/10" aria-haspopup="menu" aria-expanded="false" aria-controls="loginMenu">
+          <span data-login-avatar class="hidden h-6 w-6 place-items-center rounded-full bg-white text-[10px] font-extrabold text-brand-700"></span><i data-login-icon data-lucide="log-in" class="h-4 w-4"></i><span data-login-text>Ingresar</span><i data-lucide="chevron-down" class="login-chev h-4 w-4 opacity-70 transition-transform"></i>
+        </button>
+        <div id="loginMenu" class="login-menu absolute right-0 top-full z-50 mt-2.5 w-80 origin-top-right rounded-2xl bg-white p-2 text-ink shadow-2xl shadow-black/15 ring-1 ring-stone-200" role="menu" aria-labelledby="loginBtn" hidden>
+          <a href="mis-pedidos.html" data-login-cliente role="menuitem" class="flex items-center gap-3 rounded-xl p-3 transition hover:bg-stone-50">
+            <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-50 text-brand-600"><i data-lucide="user-round" class="h-5 w-5"></i></span>
+            <span class="min-w-0"><span class="block text-sm font-bold" data-login-cliente-title>Soy cliente</span><span class="block text-xs text-stone-500" data-login-cliente-sub>Mis pedidos · entrás con email y PIN</span></span>
+          </a>
+          <a href="#ingreso" data-auth="ingreso" data-login-corralon role="menuitem" class="flex items-center gap-3 rounded-xl p-3 transition hover:bg-stone-50">
+            <span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-sky-50 text-sky-700"><i data-lucide="store" class="h-5 w-5"></i></span>
+            <span class="min-w-0"><span class="block text-sm font-bold" data-login-corralon-title>Soy corralón</span><span class="block text-xs text-stone-500" data-login-corralon-sub>Panel de pedidos · email y contraseña</span></span>
+          </a>
+          <div data-login-logout class="hidden border-t border-stone-100 px-1 pt-1.5 mt-1"></div>
+          <p data-login-signup class="mt-1 border-t border-stone-100 px-3 pb-1.5 pt-2.5 text-xs text-stone-500">¿Tenés un corralón? <a href="#registro" data-auth="registro" class="font-bold text-brand-600 hover:underline">Sumalo gratis</a></p>
+        </div>
+      </div>
+      <a href="pedir-cotizacion.html" class="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-bold text-brand-700 shadow-sm hover:bg-brand-50"><i data-lucide="clipboard-list" class="h-4 w-4"></i>Pedir cotización</a>
+    </div>
+
+    <button id="menuBtn" class="grid h-11 w-11 place-items-center rounded-full border border-white/35 text-white lg:hidden" aria-label="Abrir menú" aria-controls="menuSheet">
+      <i data-lucide="menu" class="h-5 w-5"></i>
+    </button>
+  </div>
+</header>
+
+<div id="page">
+<!-- ================= PAGE HEADER ================= -->
+<section class="relative overflow-hidden bg-ink pt-16 text-white sm:pt-20">
+  <div class="absolute inset-0 overflow-hidden"><div class="ph bg-drift absolute inset-0 opacity-40" data-img="1629608564457-5d74829a9e14" data-w="1800"></div></div>
+  <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true"><span class="glow-blob glow-a"></span></div>
+  <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-black/70 to-black/40"></div>
+  <div class="relative mx-auto max-w-7xl px-4 pb-10 pt-8 sm:px-6 sm:pb-14 sm:pt-12 lg:px-8">
+    <nav class="flex items-center gap-1.5 text-xs font-semibold text-white/60" aria-label="Ruta">
+      <a href="index.html" class="hover:text-white">Inicio</a><i data-lucide="chevron-right" class="h-3.5 w-3.5"></i><span class="text-white">Pedir cotización</span>
+    </nav>
+    <h1 class="mt-5 text-4xl leading-[1] tracking-tightest sm:text-5xl lg:text-6xl">
+      <span class="stack-line"><span class="font-light" style="animation-delay:.05s">Armá tu pedido</span></span>
+      <span class="stack-line"><span class="font-black" style="animation-delay:.16s">de cotización.</span></span>
+    </h1>
+    <p class="mt-4 max-w-xl text-[15px] leading-relaxed text-white/75 sm:text-base" data-reveal>Escribí cada material como lo pedirías en el mostrador y al lado la cantidad. Lo enviamos ordenado a los corralones adheridos de tu zona.</p>
+    <ol class="mt-6 flex flex-wrap gap-2 text-xs font-bold" data-reveal>
+      <li class="inline-flex items-center gap-1.5 rounded-full bg-brand-600 px-3 py-1.5"><i data-lucide="list-plus" class="h-3.5 w-3.5"></i>1. Cargás tu lista</li>
+      <li class="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 backdrop-blur"><i data-lucide="send" class="h-3.5 w-3.5"></i>2. La enviamos</li>
+      <li class="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1.5 backdrop-blur"><i data-lucide="scale" class="h-3.5 w-3.5"></i>3. Comparás presupuestos</li>
+    </ol>
+  </div>
+</section>
+
+<!-- ================= FORM ================= -->
+<section class="bg-sand pb-32 pt-6 sm:pt-10 lg:pb-24">
+  <div class="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8">
+    <form id="quoteForm" class="grid gap-4 sm:gap-6 lg:grid-cols-12 lg:gap-8" novalidate>
+      <div class="min-w-0 space-y-4 sm:space-y-6 lg:col-span-8">
+
+        <!-- 1. Tipo -->
+        <fieldset class="min-w-0 rounded-[1.5rem] bg-white p-5 shadow-sm sm:rounded-[1.75rem] sm:p-8">
+          <legend class="sr-only">Quién pide la cotización</legend>
+          <div class="mb-5 flex items-center gap-3">
+            <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-600 text-xs font-black text-white">1</span>
+            <h2 class="text-lg font-extrabold">¿Quién pide la cotización?</h2>
+          </div>
+          <div class="grid grid-cols-3 gap-2 sm:gap-3">
+            <label class="seg cursor-pointer"><input type="radio" name="tipo" value="particular" class="sr-only" checked><span class="flex h-full flex-col items-center justify-center gap-1.5 rounded-2xl border border-stone-200 px-2 py-3 text-center text-xs font-bold transition sm:flex-row sm:rounded-full sm:text-sm"><i data-lucide="house" class="h-4 w-4"></i>Particular</span></label>
+            <label class="seg cursor-pointer"><input type="radio" name="tipo" value="constructora" class="sr-only"><span class="flex h-full flex-col items-center justify-center gap-1.5 rounded-2xl border border-stone-200 px-2 py-3 text-center text-xs font-bold transition sm:flex-row sm:rounded-full sm:text-sm"><i data-lucide="hard-hat" class="h-4 w-4"></i>Constructora</span></label>
+            <label class="seg cursor-pointer"><input type="radio" name="tipo" value="estudio" class="sr-only"><span class="flex h-full flex-col items-center justify-center gap-1.5 rounded-2xl border border-stone-200 px-2 py-3 text-center text-xs font-bold transition sm:flex-row sm:rounded-full sm:text-sm"><i data-lucide="pen-tool" class="h-4 w-4"></i><span>Estudio<span class="hidden sm:inline"> de arquitectura</span></span></span></label>
+          </div>
+        </fieldset>
+
+        <!-- 2. Materiales -->
+        <fieldset class="min-w-0 rounded-[1.5rem] bg-white p-5 shadow-sm sm:rounded-[1.75rem] sm:p-8">
+          <legend class="sr-only">Materiales</legend>
+          <div class="mb-1 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-600 text-xs font-black text-white">2</span>
+              <h2 class="text-lg font-extrabold">¿Qué necesitás?</h2>
+            </div>
+            <span id="itemCountBadge" class="rounded-full bg-brand-50 px-3 py-1 text-xs font-bold text-brand-700 tabular-nums">0 materiales</span>
+          </div>
+          <p class="mb-5 text-sm leading-relaxed text-stone-500">Escribí el material y elegí de las sugerencias, o dejalo como lo escribiste.<span class="hidden sm:inline"> Con <kbd class="rounded border border-stone-200 bg-sand px-1.5 py-0.5 text-[11px] font-bold">Enter</kbd> en la cantidad pasás a la fila siguiente.</span></p>
+
+          <!-- Quick add -->
+          <div class="mb-5">
+            <p class="mb-2 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-[.14em] text-stone-400"><i data-lucide="zap" class="h-3.5 w-3.5"></i><span id="quickTitle">Lo más pedido</span></p>
+            <div id="quickChips" class="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 sm:flex-wrap sm:overflow-visible"></div>
+          </div>
+
+          <div class="hidden grid-cols-12 gap-3 border-b border-stone-100 pb-2 text-[11px] font-bold uppercase tracking-wider text-stone-400 sm:grid">
+            <span class="col-span-7 pl-9">Material</span><span class="col-span-2">Cantidad</span><span class="col-span-2">Unidad</span><span class="col-span-1"></span>
+          </div>
+          <div id="rows" class="space-y-2.5 sm:space-y-0 sm:divide-y sm:divide-stone-100"></div>
+
+          <div class="mt-4 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center">
+            <button type="button" id="addRow" class="col-span-2 inline-flex items-center justify-center gap-2 rounded-full border-2 border-dashed border-stone-200 px-5 py-3 text-sm font-bold text-stone-600 hover:border-brand-600 hover:text-brand-600 sm:flex-1"><i data-lucide="plus" class="h-4 w-4"></i>Agregar material</button>
+            <button type="button" id="add5" class="inline-flex items-center justify-center gap-2 rounded-full bg-sand px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-stone-200"><i data-lucide="rows-3" class="h-4 w-4"></i>+5 filas</button>
+            <button type="button" id="pasteToggle" class="inline-flex items-center justify-center gap-2 rounded-full bg-sand px-4 py-3 text-sm font-semibold text-stone-700 hover:bg-stone-200"><i data-lucide="clipboard-paste" class="h-4 w-4"></i>Pegar lista</button>
+            <button type="button" id="xlsBtn" class="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-800 ring-1 ring-emerald-200 hover:bg-emerald-100"><i data-lucide="file-spreadsheet" class="h-4 w-4"></i>Subir Excel</button>
+            <input type="file" id="xlsInput" class="sr-only" accept=".xlsx,.xls,.csv,.ods,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv" aria-label="Subir planilla de materiales">
+          </div>
+
+          <div id="pasteBox" class="mt-4 hidden rounded-2xl border border-stone-200 bg-sand/60 p-4">
+            <label for="pasteArea" class="label">Pegá tu lista: un material por línea</label>
+            <textarea id="pasteArea" rows="5" class="field resize-y font-mono !text-[14px]" placeholder="40 bolsas cemento portland&#10;6 m3 arena gruesa&#10;60 barras hierro del 8&#10;900 ladrillos huecos 18"></textarea>
+            <div class="mt-3 flex flex-wrap items-center justify-between gap-2">
+              <p class="text-xs text-stone-500">Detectamos la cantidad y la unidad al principio de cada línea. ¿Lo tenés en Excel? Usá <b>Subir Excel</b> o arrastralo a la página.</p>
+              <button type="button" id="pasteApply" class="inline-flex items-center gap-2 rounded-full bg-brand-600 px-5 py-2.5 text-sm font-bold text-white hover:bg-brand-700"><i data-lucide="wand-sparkles" class="h-4 w-4"></i>Cargar en la lista</button>
+            </div>
+          </div>
+
+          <div class="mt-5 flex items-center justify-between gap-3 border-t border-stone-100 pt-4 text-xs text-stone-400">
+            <span id="saveState" class="inline-flex items-center gap-1.5 opacity-0 transition-opacity duration-300"><i data-lucide="circle-check" class="h-4 w-4 text-emerald-500"></i>Borrador guardado en este dispositivo</span>
+            <span class="flex flex-wrap items-center justify-end gap-x-4 gap-y-2">
+              <button type="button" id="openLists" class="no-press inline-flex items-center gap-1.5 font-semibold text-stone-600 hover:text-ink"><i data-lucide="folder-open" class="h-4 w-4"></i>Mis listas<span id="listsCount" class="hidden rounded-full bg-sand px-1.5 text-[11px] font-bold tabular-nums"></span></button>
+              <button type="button" id="saveList" class="no-press inline-flex items-center gap-1.5 font-semibold text-stone-600 hover:text-ink"><i data-lucide="bookmark-plus" class="h-4 w-4"></i>Guardar lista</button>
+              <button type="button" id="clearAll" class="no-press inline-flex items-center gap-1.5 font-semibold text-stone-500 hover:text-brand-600"><i data-lucide="eraser" class="h-4 w-4"></i>Vaciar lista</button>
+            </span>
+          </div>
+        </fieldset>
+
+        <!-- 3. Obra y entrega -->
+        <fieldset class="min-w-0 rounded-[1.5rem] bg-white p-5 shadow-sm sm:rounded-[1.75rem] sm:p-8">
+          <legend class="sr-only">Obra y entrega</legend>
+          <div class="mb-5 flex items-center gap-3">
+            <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-600 text-xs font-black text-white">3</span>
+            <h2 class="text-lg font-extrabold">¿Dónde y cuándo?</h2>
+          </div>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div><label class="label" for="provincia">Provincia *</label><select id="provincia" class="field" autocomplete="address-level1"><option value="">Seleccioná</option></select></div>
+            <div><label class="label" for="localidad">Localidad *</label><input id="localidad" class="field" placeholder="Ej.: Yerba Buena" autocomplete="address-level2" /></div>
+            <div class="sm:col-span-2"><label class="label" for="direccion">Dirección de la obra</label><input id="direccion" class="field" placeholder="Calle, número, barrio o referencia" autocomplete="street-address" /></div>
+            <div><label class="label" for="fecha">Fecha necesaria de entrega *</label><input id="fecha" type="date" class="field" /></div>
+            <div>
+              <label class="label" for="acceso">Acceso para descarga</label>
+              <select id="acceso" class="field"><option>Sin restricciones</option><option>Calle angosta / sin camión grande</option><option>Requiere grúa o hidrogrúa</option><option>Retiro en el corralón</option></select>
+            </div>
+            <div class="sm:col-span-2"><label class="label" for="notas">Notas para el corralón <span class="font-medium normal-case tracking-normal text-stone-400">(opcional)</span></label><textarea id="notas" rows="3" class="field resize-none" placeholder="Ej.: entregas parciales, horario de descarga, aceptamos marcas equivalentes…"></textarea></div>
+          </div>
+        </fieldset>
+
+        <!-- 4. Contacto -->
+        <fieldset class="min-w-0 rounded-[1.5rem] bg-white p-5 shadow-sm sm:rounded-[1.75rem] sm:p-8">
+          <legend class="sr-only">Datos de contacto</legend>
+          <div class="mb-5 flex items-center gap-3">
+            <span class="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-brand-600 text-xs font-black text-white">4</span>
+            <h2 class="text-lg font-extrabold">Tus datos de contacto</h2>
+          </div>
+          <div id="asWho" class="mb-5 hidden items-center justify-between gap-3 rounded-2xl bg-sand px-4 py-3 text-sm">
+            <span class="flex min-w-0 items-center gap-2"><i data-lucide="user-check" class="h-4 w-4 shrink-0 text-emerald-600"></i><span class="truncate">Pedís como <b id="asWhoName"></b></span></span>
+            <button type="button" id="notMe" class="no-press shrink-0 font-semibold text-brand-600 hover:text-brand-700">No soy yo</button>
+          </div>
+          <p class="mb-5 flex items-start gap-2 rounded-2xl bg-brand-50/70 px-4 py-3 text-xs leading-relaxed text-stone-600" id="pinNote"><i data-lucide="key-round" class="mt-0.5 h-4 w-4 shrink-0 text-brand-600"></i><span>Al enviar te damos un <b>PIN de acceso</b> al instante. Con tu email y ese PIN entrás a <b>Mis pedidos</b> para seguir el pedido y comparar presupuestos.</span></p>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div><label class="label" for="nombre">Nombre *</label><input id="nombre" class="field" autocomplete="given-name" /></div>
+            <div><label class="label" for="apellido">Apellido *</label><input id="apellido" class="field" autocomplete="family-name" /></div>
+            <div id="empresaWrap" class="hidden"><label class="label" for="empresa"><span id="empresaLabel">Empresa</span> *</label><input id="empresa" class="field" autocomplete="organization" /></div>
+            <div><label class="label" for="email">Email *</label><input id="email" type="email" inputmode="email" autocapitalize="off" class="field" autocomplete="email" /></div>
+            <div><label class="label" for="telefono">WhatsApp *</label><input id="telefono" type="tel" inputmode="tel" class="field" autocomplete="tel" placeholder="Ej.: 381 555 1234" /></div>
+          </div>
+          <label class="mt-5 flex items-start gap-3 text-sm leading-relaxed text-stone-500">
+            <input id="acepto" type="checkbox" class="mt-1 h-4 w-4 shrink-0 rounded accent-brand-600" />
+            <span>Acepto que mi pedido se envíe a los corralones adheridos de la zona. Mis datos de contacto se comparten solo con el corralón cuyo presupuesto acepte.</span>
+          </label>
+        </fieldset>
+      </div>
+
+      <!-- Summary (desktop) -->
+      <aside class="hidden min-w-0 lg:col-span-4 lg:block">
+        <div class="sticky top-28 overflow-hidden rounded-[1.75rem] bg-white shadow-xl shadow-stone-300/40">
+          <div class="bg-brand-50 px-6 py-6">
+            <p class="text-[11px] font-bold uppercase tracking-[.18em] text-brand-700/70">Resumen del pedido</p>
+            <p class="mt-1 text-3xl font-black"><span class="sum-count tabular-nums">0</span> <span class="sum-word">materiales</span></p>
+          </div>
+          <dl class="space-y-4 px-6 py-6 text-sm">
+            <div class="flex justify-between gap-4"><dt class="flex items-center gap-2 text-stone-400"><i data-lucide="user" class="h-4 w-4"></i>Solicitante</dt><dd id="sumTipo" class="text-right font-bold">Particular</dd></div>
+            <div class="flex justify-between gap-4"><dt class="flex items-center gap-2 text-stone-400"><i data-lucide="map-pin" class="h-4 w-4"></i>Obra en</dt><dd id="sumLugar" class="text-right font-bold">—</dd></div>
+            <div class="flex justify-between gap-4"><dt class="flex items-center gap-2 text-stone-400"><i data-lucide="calendar" class="h-4 w-4"></i>Entrega</dt><dd id="sumFecha" class="text-right font-bold">—</dd></div>
+          </dl>
+          <div class="mx-6 rounded-2xl bg-sand p-4 text-xs leading-relaxed text-stone-600">
+            <p class="mb-1.5 flex items-center gap-2 font-bold text-ink"><i data-lucide="store" class="h-4 w-4 text-brand-600"></i>Cada corralón completará:</p>
+            Precio por material · Costo de flete · Tiempo de entrega
+          </div>
+          <div class="p-6">
+            <button type="submit" class="flex w-full items-center justify-center gap-2.5 rounded-full bg-brand-600 py-4 text-sm font-bold text-white shadow-lg shadow-brand-600/30 hover:bg-brand-700">Enviar a corralones<i data-lucide="send" class="h-4 w-4"></i></button>
+            <button type="button" class="preview-btn mt-3 flex w-full items-center justify-center gap-2 rounded-full border border-stone-200 py-3 text-xs font-bold text-stone-600 hover:border-ink hover:text-ink"><i data-lucide="eye" class="h-4 w-4"></i>Ver cómo le llega al corralón</button>
+          </div>
+        </div>
+      </aside>
+    </form>
+  </div>
+</section>
+
+<!-- Mobile action bar -->
+<div id="mobileBar" class="fixed inset-x-0 bottom-0 z-40 border-t border-stone-200 bg-white/95 px-3 pt-3 backdrop-blur lg:hidden" style="padding-bottom:calc(.75rem + env(safe-area-inset-bottom))">
+  <div class="mx-auto flex max-w-xl items-center gap-2">
+    <button type="button" class="preview-btn grid h-12 w-12 shrink-0 place-items-center rounded-full border border-stone-200 text-stone-600" aria-label="Ver cómo le llega al corralón"><i data-lucide="eye" class="h-5 w-5"></i></button>
+    <div class="min-w-0 flex-1 leading-tight">
+      <p class="text-base font-black"><span class="sum-count tabular-nums">0</span> <span class="sum-word">materiales</span></p>
+      <p id="mobileHint" class="truncate text-xs text-stone-500">Cargá lo que necesitás</p>
+    </div>
+    <button type="submit" form="quoteForm" class="inline-flex h-12 shrink-0 items-center gap-2 rounded-full bg-brand-600 px-5 text-sm font-bold text-white shadow-lg shadow-brand-600/30">Enviar<i data-lucide="send" class="h-4 w-4"></i></button>
+  </div>
+</div>
+
+<!-- ================= FOOTER ================= -->
+<footer class="bg-ink pb-24 text-white lg:pb-0">
+  <div class="mx-auto grid max-w-7xl grid-cols-2 gap-x-6 gap-y-10 px-4 py-14 sm:px-6 sm:py-16 md:grid-cols-12 md:gap-12 lg:px-8">
+    <div class="col-span-2 md:col-span-5">
+      <a href="index.html" class="flex items-center gap-2.5">
+        <span class="grid h-10 w-10 place-items-center rounded-full bg-brand-600"><i data-lucide="house" class="h-5 w-5"></i></span>
+        <span class="text-lg font-extrabold tracking-tight">Cotiza<span class="text-brand-500">Obra</span></span>
+      </a>
+      <p class="mt-5 max-w-sm text-sm leading-relaxed text-white/50">La forma simple de pedir presupuestos de materiales a los corralones de tu zona y recibirlos listos para comparar.</p>
+    </div>
+    <div class="md:col-span-2">
+      <p class="mb-4 text-xs font-bold uppercase tracking-[.18em] text-white/40">Plataforma</p>
+      <ul class="space-y-3 text-sm text-white/70">
+        <li><a href="index.html#como-funciona" class="hover:text-white">Cómo funciona</a></li><li><a href="pedir-cotizacion.html" class="hover:text-white">Pedir cotización</a></li><li><a href="mis-pedidos.html" class="hover:text-white">Mis pedidos</a></li><li><a href="index.html#casos" class="hover:text-white">Casos de uso</a></li><li><a href="adheridos.html" class="hover:text-white">Corralones adheridos</a></li><li><button type="button" data-install hidden class="inline-flex items-center gap-1.5 hover:text-white"><i data-lucide="smartphone" class="h-4 w-4"></i>Instalar la app</button></li>
+      </ul>
+    </div>
+    <div class="md:col-span-2">
+      <p class="mb-4 text-xs font-bold uppercase tracking-[.18em] text-white/40">Corralones</p>
+      <ul class="space-y-3 text-sm text-white/70">
+        <li><a href="#registro" data-auth="registro" class="hover:text-white">Adherir mi corralón</a></li><li><a href="panel-corralon.html" class="hover:text-white">Panel del corralón</a></li>
+      </ul>
+    </div>
+    <div class="col-span-2 md:col-span-3">
+      <p class="mb-4 text-xs font-bold uppercase tracking-[.18em] text-white/40">Contacto</p>
+      <ul class="space-y-3 text-sm text-white/70"><li class="flex items-center gap-2.5"><i data-lucide="mail" class="h-4 w-4 text-brand-500"></i>hola@tudominio.com</li><li class="flex items-center gap-2.5"><svg class="h-4 w-4 text-brand-500" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>WhatsApp: +54 9 000 000 0000</li><li class="flex items-center gap-2.5"><i data-lucide="map-pin" class="h-4 w-4 text-brand-500"></i>Argentina</li></ul>
+    </div>
+  </div>
+  <div class="border-t border-white/10">
+    <div class="mx-auto flex max-w-7xl flex-col justify-between gap-3 px-4 py-6 text-xs text-white/40 sm:flex-row sm:px-6 lg:px-8" style="padding-bottom:calc(1.5rem + env(safe-area-inset-bottom))">
+      <p>© 2026 CotizaObra. Todos los derechos reservados.</p>
+      <p><a href="#" class="hover:text-white">Términos</a> · <a href="#" class="hover:text-white">Privacidad</a></p>
+    </div>
+  </div>
+</footer>
+
+</div><!-- /#page -->
+
+<!-- Overlay shared by drawers -->
+<div id="sheetOverlay" class="fixed inset-0 z-[58] bg-black/50"></div>
+
+<!-- Mobile menu drawer -->
+<div id="menuSheet" class="sheet fixed inset-x-0 bottom-0 z-[60] rounded-t-[1.75rem] bg-white lg:hidden" role="dialog" aria-modal="true" aria-label="Menú" tabindex="-1">
+  <div data-drag class="pb-2 pt-3"><span class="mx-auto block h-1.5 w-12 rounded-full bg-stone-300"></span></div>
+  <nav class="flex flex-col px-4 text-lg font-bold text-ink" style="padding-bottom:calc(2rem + env(safe-area-inset-bottom))">
+    <a href="index.html#como-funciona" class="sheet-link flex items-center justify-between rounded-2xl px-4 py-3.5 hover:bg-sand">Cómo funciona<i data-lucide="chevron-right" class="h-5 w-5 text-stone-300"></i></a>
+    <a href="index.html#casos" class="sheet-link flex items-center justify-between rounded-2xl px-4 py-3.5 hover:bg-sand">Casos de uso<i data-lucide="chevron-right" class="h-5 w-5 text-stone-300"></i></a>
+    <a href="adheridos.html" class="sheet-link flex items-center justify-between rounded-2xl px-4 py-3.5 hover:bg-sand">Adheridos<i data-lucide="chevron-right" class="h-5 w-5 text-stone-300"></i></a>
+    <a href="#registro" data-auth="registro" class="flex items-center justify-between rounded-2xl px-4 py-3.5 hover:bg-sand">Para corralones<i data-lucide="chevron-right" class="h-5 w-5 text-stone-300"></i></a>
+    <p class="mt-4 px-4 text-[11px] font-bold uppercase tracking-[.16em] text-stone-400">Ingresar</p>
+    <div class="mt-2 grid gap-2 px-1">
+      <a href="mis-pedidos.html" data-login-cliente class="sheet-link flex items-center gap-3 rounded-2xl p-3 ring-1 ring-stone-200"><span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-50 text-brand-600"><i data-lucide="user-round" class="h-5 w-5"></i></span><span class="min-w-0 flex-1"><span class="block text-sm" data-login-cliente-title>Soy cliente</span><span class="block text-xs font-medium text-stone-500" data-login-cliente-sub>Mis pedidos · email y PIN</span></span></a>
+      <a href="#ingreso" data-auth="ingreso" data-login-corralon class="flex items-center gap-3 rounded-2xl p-3 ring-1 ring-stone-200"><span class="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-sky-50 text-sky-700"><i data-lucide="store" class="h-5 w-5"></i></span><span class="min-w-0 flex-1"><span class="block text-sm" data-login-corralon-title>Soy corralón</span><span class="block text-xs font-medium text-stone-500" data-login-corralon-sub>Panel · email y contraseña</span></span></a>
+      <a href="pedir-cotizacion.html" class="sheet-link mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-brand-600 py-3.5 text-sm text-white"><i data-lucide="clipboard-list" class="h-4 w-4"></i>Pedir cotización</a>
+      <button type="button" data-install hidden class="inline-flex items-center justify-center gap-2 rounded-full bg-stone-100 py-3.5 text-sm text-ink"><i data-lucide="smartphone" class="h-4 w-4"></i>Instalar la app</button>
+    </div>
+  </nav>
+</div>
+
+<!-- Corralón sign-up / sign-in: drawer on phones, split dialog on desktop -->
+<div id="authSheet" class="sheet modal-sheet fixed inset-x-0 bottom-0 z-[60] flex max-h-[94svh] flex-col overflow-hidden rounded-t-[1.75rem] bg-white sm:w-[calc(100%-3rem)] sm:max-w-[960px] sm:rounded-[1.5rem]" role="dialog" aria-modal="true" aria-labelledby="authTitle" tabindex="-1">
+  <div class="grid min-h-0 flex-1 md:min-h-[620px] md:grid-cols-2">
+    <div class="flex min-h-0 flex-col">
+      <div data-drag class="shrink-0 pt-3 sm:hidden"><span class="mx-auto block h-1.5 w-12 rounded-full bg-stone-300"></span></div>
+      <div data-drag class="flex shrink-0 items-center justify-between px-6 pt-3 sm:px-10 sm:pt-8">
+        <span class="flex items-center gap-2.5">
+          <span class="grid h-9 w-9 place-items-center rounded-full bg-brand-600 text-white"><i data-lucide="house" class="h-[18px] w-[18px]"></i></span>
+          <span class="text-base font-extrabold tracking-tight">Cotiza<span class="text-brand-600">Obra</span></span>
+        </span>
+        <button type="button" id="authClose" class="grid h-10 w-10 place-items-center rounded-full text-stone-500 hover:bg-sand hover:text-ink" aria-label="Cerrar"><i data-lucide="x" class="h-5 w-5"></i></button>
+      </div>
+
+      <div class="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain">
+        <div class="flex flex-1 flex-col justify-center px-6 py-8 sm:px-10 md:px-14">
+          <div class="mx-auto w-full max-w-sm">
+
+            <!-- Registro -->
+            <form class="auth-view" data-view="registro" novalidate>
+              <p class="text-sm font-medium text-stone-500">Sumá tu corralón</p>
+              <h2 id="authTitle" class="mt-1 text-2xl font-extrabold tracking-tight sm:text-[1.7rem]">Creá tu cuenta</h2>
+              <div class="mt-8 space-y-5">
+                <div>
+                  <div class="fl"><input id="regEmail" type="email" autocomplete="email" placeholder="ejemplo@corralon.com" inputmode="email" autocapitalize="off" spellcheck="false" /><label for="regEmail">E-mail</label><i data-lucide="mail" class="fl-icon"></i></div>
+                  <p class="fl-error"><i data-lucide="circle-alert" class="h-3.5 w-3.5"></i><span></span></p>
+                </div>
+                <div>
+                  <div class="fl"><input id="regPass" type="password" autocomplete="new-password" placeholder="Mínimo 8 caracteres" /><label for="regPass">Contraseña</label><button type="button" class="fl-icon pw-toggle no-press" data-target="regPass" aria-label="Mostrar contraseña" aria-pressed="false"><i data-lucide="eye" class="ic-on h-5 w-5"></i><i data-lucide="eye-off" class="ic-off h-5 w-5"></i></button></div>
+                  <p class="fl-error"><i data-lucide="circle-alert" class="h-3.5 w-3.5"></i><span></span></p>
+                  <div id="strength" class="mt-3 hidden" aria-live="polite">
+                    <div class="strength flex gap-1.5"><span></span><span></span><span></span><span></span></div>
+                    <p class="mt-1.5 flex justify-between text-xs text-stone-500"><span id="strengthLabel"></span><span>Mínimo 8 caracteres</span></p>
+                  </div>
+                </div>
+                <div class="-mt-1 flex justify-end"><button type="button" data-goto="recuperar" class="no-press text-sm font-semibold text-brand-600 hover:text-brand-700">¿Olvidaste tu contraseña?</button></div>
+              </div>
+              <button type="submit" class="auth-submit mt-6 flex h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-brand-600 text-[15px] font-bold text-white hover:bg-brand-700"><span>Crear cuenta</span></button>
+              <p class="mt-4 text-center text-xs leading-relaxed text-stone-400">Al crear tu cuenta aceptás los <a href="#" class="underline hover:text-ink">Términos</a> y la <a href="#" class="underline hover:text-ink">Política de privacidad</a>.</p>
+            </form>
+
+            <!-- Ingreso -->
+            <form class="auth-view" data-view="ingreso" novalidate hidden>
+              <p class="text-sm font-medium text-stone-500">Hola de nuevo</p>
+              <h2 class="mt-1 text-2xl font-extrabold tracking-tight sm:text-[1.7rem]">Ingresá a tu cuenta</h2>
+              <div class="mt-8 space-y-5">
+                <div>
+                  <div class="fl"><input id="logEmail" type="email" autocomplete="email" placeholder="ejemplo@corralon.com" inputmode="email" autocapitalize="off" spellcheck="false" /><label for="logEmail">E-mail</label><i data-lucide="mail" class="fl-icon"></i></div>
+                  <p class="fl-error"><i data-lucide="circle-alert" class="h-3.5 w-3.5"></i><span></span></p>
+                </div>
+                <div>
+                  <div class="fl"><input id="logPass" type="password" autocomplete="current-password" placeholder="Tu contraseña" /><label for="logPass">Contraseña</label><button type="button" class="fl-icon pw-toggle no-press" data-target="logPass" aria-label="Mostrar contraseña" aria-pressed="false"><i data-lucide="eye" class="ic-on h-5 w-5"></i><i data-lucide="eye-off" class="ic-off h-5 w-5"></i></button></div>
+                  <p class="fl-error"><i data-lucide="circle-alert" class="h-3.5 w-3.5"></i><span></span></p>
+                </div>
+                <div class="-mt-1 flex justify-end"><button type="button" data-goto="recuperar" class="no-press text-sm font-semibold text-brand-600 hover:text-brand-700">¿Olvidaste tu contraseña?</button></div>
+              </div>
+              <button type="submit" class="auth-submit mt-6 flex h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-brand-600 text-[15px] font-bold text-white hover:bg-brand-700"><span>Ingresar</span></button>
+            </form>
+
+            <!-- Recuperar -->
+            <form class="auth-view" data-view="recuperar" novalidate hidden>
+              <button type="button" data-goto="back" class="no-press -ml-1 mb-6 inline-flex items-center gap-1.5 text-sm font-semibold text-stone-500 hover:text-ink"><i data-lucide="arrow-left" class="h-4 w-4"></i>Volver</button>
+              <span class="mb-5 grid h-12 w-12 place-items-center rounded-full bg-brand-50 text-brand-600"><i data-lucide="key-round" class="h-6 w-6"></i></span>
+              <h2 class="text-2xl font-extrabold tracking-tight sm:text-[1.7rem]">Recuperá tu contraseña</h2>
+              <p class="mt-2 text-sm leading-relaxed text-stone-500">Ingresá el email de tu cuenta y te enviamos un link para crear una contraseña nueva.</p>
+              <div class="mt-7"><div>
+                  <div class="fl"><input id="recEmail" type="email" autocomplete="email" placeholder="ejemplo@corralon.com" inputmode="email" autocapitalize="off" spellcheck="false" /><label for="recEmail">E-mail</label><i data-lucide="mail" class="fl-icon"></i></div>
+                  <p class="fl-error"><i data-lucide="circle-alert" class="h-3.5 w-3.5"></i><span></span></p>
+                </div></div>
+              <button type="submit" class="auth-submit mt-6 flex h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-brand-600 text-[15px] font-bold text-white hover:bg-brand-700"><span>Enviar link</span></button>
+            </form>
+
+            <!-- Listo -->
+            <div class="auth-view text-center" data-view="listo" hidden>
+              <span class="mx-auto grid h-16 w-16 place-items-center rounded-full bg-emerald-50 text-emerald-600"><i data-lucide="circle-check" class="h-8 w-8"></i></span>
+              <h2 id="doneTitle" class="mt-6 text-2xl font-extrabold tracking-tight"></h2>
+              <p id="doneText" class="mt-3 text-sm leading-relaxed text-stone-500"></p>
+              <button type="button" id="doneBtn" class="mt-8 flex h-[52px] w-full items-center justify-center rounded-xl bg-brand-600 text-[15px] font-bold text-white hover:bg-brand-700">Entendido</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="authFoot" class="shrink-0 border-t border-stone-100 px-6 py-5 text-sm text-stone-500 sm:px-10" style="padding-bottom:calc(1.25rem + env(safe-area-inset-bottom))">
+          <p data-foot="registro">¿Ya tenés cuenta? <button type="button" data-goto="ingreso" class="no-press font-bold text-brand-600 hover:text-brand-700">Ingresá</button></p>
+          <p data-foot="ingreso" hidden>¿Todavía no tenés cuenta? <button type="button" data-goto="registro" class="no-press font-bold text-brand-600 hover:text-brand-700">Registrá tu corralón</button></p>
+          <p data-foot="recuperar" hidden>¿Te acordaste? <button type="button" data-goto="ingreso" class="no-press font-bold text-brand-600 hover:text-brand-700">Volver a ingresar</button></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Photo panel (desktop) -->
+    <div class="relative hidden overflow-hidden md:block">
+      <div class="swiper swiper-auth absolute inset-0">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide"><div class="ph absolute inset-0" data-img="1637241612956-b7309005288b" data-w="1000"></div></div>
+          <div class="swiper-slide"><div class="ph absolute inset-0" data-img="1629608564457-5d74829a9e14" data-w="1000"></div></div>
+          <div class="swiper-slide"><div class="ph absolute inset-0" data-img="1580810734915-93a368ed2073" data-w="1000"></div></div>
+        </div>
+      </div>
+      <div class="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/85 via-black/30 to-transparent"></div>
+      <div class="pointer-events-none absolute inset-x-0 bottom-0 z-10 p-10 text-white">
+        <span class="inline-flex items-center gap-1.5 rounded-full bg-brand-600 px-3 py-1 text-xs font-bold"><i data-lucide="store" class="h-3.5 w-3.5"></i>Para corralones</span>
+        <p class="mt-4 text-3xl leading-tight tracking-tight"><span class="font-light">Pedidos de tu zona,</span><br><span class="font-extrabold">listos para cotizar.</span></p>
+        <ul class="mt-6 space-y-2.5 text-sm text-white/85">
+          <li class="flex items-center gap-2.5"><i data-lucide="map-pin" class="h-4 w-4 text-brand-400"></i>Solo pedidos donde entregás</li>
+          <li class="flex items-center gap-2.5"><i data-lucide="clipboard-list" class="h-4 w-4 text-brand-400"></i>Listas limpias y numeradas</li>
+          <li class="flex items-center gap-2.5"><i data-lucide="clock" class="h-4 w-4 text-brand-400"></i>Respondés precio, flete y demora</li>
+        </ul>
+      </div>
+      <div class="auth-pag light-pag pointer-events-auto absolute bottom-10 right-10 z-20 !w-auto"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Order preview: drawer on phones, dialog on desktop -->
+<div id="dropOverlay" class="pointer-events-none fixed inset-0 z-[70] hidden items-center justify-center bg-emerald-900/30 p-6 backdrop-blur-sm" aria-hidden="true">
+  <div class="rounded-[1.75rem] border-2 border-dashed border-emerald-400 bg-white px-10 py-9 text-center shadow-2xl">
+    <span class="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-emerald-50 text-emerald-700"><i data-lucide="file-spreadsheet" class="h-7 w-7"></i></span>
+    <p class="mt-4 text-lg font-extrabold">Soltá tu planilla acá</p>
+    <p class="mt-1 text-sm text-stone-500">Excel (.xlsx, .xls), .ods o .csv</p>
+  </div>
+</div>
+<div id="modalCard" class="sheet modal-sheet fixed inset-x-0 bottom-0 z-[60] flex max-h-[92vh] flex-col overflow-hidden rounded-t-[1.75rem] bg-white sm:w-[calc(100%-3rem)] sm:max-w-3xl sm:rounded-[1.75rem]" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
+  <div data-drag class="shrink-0 bg-brand-600 text-white">
+    <div class="pt-3 sm:hidden"><span class="mx-auto block h-1.5 w-12 rounded-full bg-white/50"></span></div>
+    <div class="flex items-start justify-between gap-4 px-6 py-5 sm:px-8">
+      <div>
+        <p id="modalKicker" class="text-xs font-bold uppercase tracking-[.18em] text-white/70">Vista previa · así lo recibe el corralón</p>
+        <h3 id="modalTitle" class="mt-1 text-2xl font-black">Pedido #—</h3>
+      </div>
+      <button id="modalClose" class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/15 hover:bg-white/25" aria-label="Cerrar"><i data-lucide="x" class="h-5 w-5"></i></button>
+    </div>
+  </div>
+  <div id="modalBody" class="overflow-y-auto overscroll-contain px-6 py-6 sm:px-8"></div>
+</div>
+
+<!-- Toasts -->
+<section aria-label="Notificaciones" aria-live="polite"><ol id="toaster"></ol></section>
+
+<script src="js/store.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11.1.14/swiper-bundle.min.js"></script>
+<script>
+/* ============ HELPERS ============ */
+const $ = (s, el = document) => el.querySelector(s);
+const $$ = (s, el = document) => [...el.querySelectorAll(s)];
+const money = n => '$ ' + Math.round(n).toLocaleString('es-AR');
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const IMG = (id, w = 1000) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=75`;
+
+function applyImages(root = document) {
+  $$('.ph[data-img]', root).forEach(el => {
+    if (el.dataset.loaded) return;
+    el.dataset.loaded = 1;
+    const url = IMG(el.dataset.img, el.dataset.w || 1000), img = new Image();
+    img.onload = () => { el.style.backgroundImage = `url('${url}')`; el.classList.add('loaded'); };
+    img.src = url;
+  });
+}
+
+/* ---------- Sonner-style toaster ---------- */
+const toaster = document.getElementById('toaster');
+const TOAST_ICONS = {
+  success: '<span class="t-icon bg-emerald-500 text-white"><svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg></span>',
+  error: '<span class="t-icon bg-brand-600 text-white"><svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round"><path d="M12 7v6M12 17h.01"/></svg></span>',
+  info: '<span class="t-icon bg-ink text-white"><svg viewBox="0 0 24 24" class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M12 11v6M12 7h.01"/></svg></span>'
+};
+const TOAST = { gap: 10, peek: 14, visible: 3, duration: 4000 };
+let toasts = [], toastsExpanded = false;
+
+function toast(title, opts = {}) {
+  const type = opts.type || 'info';
+  const el = document.createElement('li');
+  el.className = 's-toast';
+  el.setAttribute('role', type === 'error' ? 'alert' : 'status');
+  el.innerHTML = `${TOAST_ICONS[type]}<div class="min-w-0 flex-1"><p class="t-title">${esc(title)}</p>${opts.desc ? `<p class="t-desc">${esc(opts.desc)}</p>` : ''}</div>${opts.action ? `<button type="button" class="t-action no-press shrink-0 self-center rounded-full bg-brand-600 px-3 py-1.5 text-xs font-bold text-white">${esc(opts.action.label)}</button>` : ''}`;
+  el.style.opacity = '0';
+  el.style.transform = 'translate3d(0,100%,0)';
+  toaster.appendChild(el);
+  const t = { el, h: el.offsetHeight, remaining: opts.duration || TOAST.duration, timer: null, started: 0 };
+  toasts.unshift(t);
+  bindToastSwipe(t);
+  if (opts.action) $('.t-action', el).addEventListener('click', ev => { ev.stopPropagation(); opts.action.onClick(); dismissToast(t); });
+  requestAnimationFrame(() => requestAnimationFrame(layoutToasts));
+  if (!toastsExpanded) startToastTimer(t);
+  return t;
+}
+function layoutToasts() {
+  if (!toasts.length) { toaster.style.height = '0px'; return; }
+  const front = toasts[0].h;
+  let offset = 0;
+  toasts.forEach((t, i) => {
+    let y, scale, height;
+    if (toastsExpanded) { y = -offset; scale = 1; height = t.h; offset += t.h + TOAST.gap; }
+    else { y = -i * TOAST.peek; scale = 1 - i * .05; height = i === 0 ? t.h : front; }
+    t.base = `translate3d(0,${y}px,0) scale(${scale})`;
+    t.el.style.transform = t.base;
+    t.el.style.height = height + 'px';
+    t.el.style.opacity = i < TOAST.visible ? '1' : '0';
+    t.el.style.pointerEvents = i < TOAST.visible ? 'auto' : 'none';
+    t.el.style.zIndex = String(100 - i);
+  });
+  const shown = Math.min(toasts.length, TOAST.visible);
+  toaster.style.height = (toastsExpanded
+    ? toasts.slice(0, shown).reduce((s, t) => s + t.h, 0) + TOAST.gap * (shown - 1)
+    : front + TOAST.peek * (shown - 1)) + 'px';
+}
+function startToastTimer(t) {
+  clearTimeout(t.timer); t.started = performance.now();
+  t.timer = setTimeout(() => dismissToast(t), t.remaining);
+}
+function pauseToastTimer(t) { clearTimeout(t.timer); t.remaining = Math.max(800, t.remaining - (performance.now() - t.started)); }
+function dismissToast(t, swipe) {
+  if (!toasts.includes(t)) return;
+  clearTimeout(t.timer);
+  toasts = toasts.filter(x => x !== t);
+  t.el.style.pointerEvents = 'none';
+  t.el.style.opacity = '0';
+  t.el.style.transform = swipe || `${t.base} translate3d(0,40%,0) scale(.96)`;
+  setTimeout(() => t.el.remove(), 400);
+  layoutToasts();
+}
+function bindToastSwipe(t) {
+  const el = t.el; let sx = 0, sy = 0, dx = 0, dy = 0, axis = null, down = false, t0 = 0;
+  el.addEventListener('pointerdown', e => { if (e.target.closest('.t-action')) return; down = true; axis = null; sx = e.clientX; sy = e.clientY; dx = dy = 0; t0 = performance.now(); el.setPointerCapture(e.pointerId); el.style.transition = 'none'; });
+  el.addEventListener('pointermove', e => {
+    if (!down) return;
+    dx = e.clientX - sx; dy = e.clientY - sy;
+    if (!axis && Math.hypot(dx, dy) > 4) axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+    // allow right / down; resist the other directions
+    const mx = axis === 'x' ? (dx > 0 ? dx : -Math.sqrt(-dx)) : 0;
+    const my = axis === 'y' ? (dy > 0 ? dy : -Math.sqrt(-dy)) : 0;
+    el.style.transform = `${t.base} translate3d(${mx}px,${my}px,0)`;
+  });
+  const end = () => {
+    if (!down) return; down = false; el.style.transition = '';
+    const dist = axis === 'x' ? dx : dy, v = dist / (performance.now() - t0);
+    if (dist > 45 || v > .11 && dist > 10) dismissToast(t, `${t.base} translate3d(${axis === 'x' ? '120%' : 0},${axis === 'y' ? '120%' : 0},0)`);
+    else el.style.transform = t.base;
+  };
+  el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+}
+toaster.addEventListener('mouseenter', () => { toastsExpanded = true; toasts.forEach(pauseToastTimer); layoutToasts(); });
+toaster.addEventListener('mouseleave', () => { toastsExpanded = false; toasts.forEach(startToastTimer); layoutToasts(); });
+
+/* ---------- Vaul-style drawers ---------- */
+const overlay = document.getElementById('sheetOverlay');
+const pageEl = document.getElementById('page');
+const isPhone = () => matchMedia('(max-width: 639px)').matches;
+let openSheetEl = null, lastFocus = null;
+document.querySelectorAll('.sheet').forEach(s => s.inert = true);
+
+function openSheet(el) {
+  if (openSheetEl && openSheetEl !== el) closeSheet(openSheetEl);
+  lastFocus = document.activeElement;
+  openSheetEl = el; el.inert = false;
+  el.style.transform = ''; overlay.style.opacity = '';
+  overlay.classList.add('show');
+  requestAnimationFrame(() => el.classList.add('open'));
+  document.body.style.overflow = 'hidden';
+  if (el.id === 'menuSheet' || isPhone()) {
+    pageEl.style.transformOrigin = `50% ${window.scrollY + window.innerHeight / 2}px`;
+    document.body.classList.add('sheet-open');
+  }
+  setTimeout(() => el.focus({ preventScroll: true }), 50);
+}
+function closeSheet(el = openSheetEl) {
+  if (!el) return;
+  el.style.transform = ''; overlay.style.opacity = '';
+  el.classList.remove('open'); el.inert = true;
+  overlay.classList.remove('show');
+  document.body.classList.remove('sheet-open');
+  document.body.style.overflow = '';
+  if (openSheetEl === el) openSheetEl = null;
+  if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+}
+function enableDrag(el) {
+  let down = false, sy = 0, dy = 0, t0 = 0, hgt = 0;
+  el.addEventListener('pointerdown', e => {
+    if (!e.target.closest('[data-drag]') || e.target.closest('button')) return;
+    if (el.classList.contains('modal-sheet') && !isPhone()) return;
+    down = true; sy = e.clientY; dy = 0; t0 = performance.now(); hgt = el.offsetHeight;
+    el.setPointerCapture(e.pointerId);
+    el.style.transition = 'none'; overlay.style.transition = 'none'; pageEl.style.transition = 'none';
+  });
+  el.addEventListener('pointermove', e => {
+    if (!down) return;
+    dy = e.clientY - sy;
+    const d = dy < 0 ? -Math.sqrt(-dy) * 2 : dy;            // rubber-band upwards
+    const progress = Math.max(0, Math.min(1, d / hgt));
+    el.style.transform = `translate3d(0,${d}px,0)`;
+    overlay.style.opacity = String(1 - progress);
+    if (document.body.classList.contains('sheet-open')) {
+      pageEl.style.transform = `scale(${.94 + .06 * progress}) translate3d(0,${14 * (1 - progress)}px,0)`;
+      pageEl.style.borderRadius = `${20 * (1 - progress)}px`;
+    }
+  });
+  const end = () => {
+    if (!down) return; down = false;
+    el.style.transition = ''; overlay.style.transition = ''; pageEl.style.transition = '';
+    pageEl.style.transform = ''; pageEl.style.borderRadius = '';
+    const v = dy / (performance.now() - t0);
+    if (dy > hgt * .3 || (v > .5 && dy > 20)) closeSheet(el);
+    else { el.style.transform = ''; overlay.style.opacity = ''; }
+  };
+  el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+}
+document.querySelectorAll('.sheet').forEach(enableDrag);
+overlay.addEventListener('click', () => closeSheet());
+
+/* ============ DATA ============ */
+const PROVINCIAS = ['Buenos Aires','CABA','Catamarca','Chaco','Chubut','Córdoba','Corrientes','Entre Ríos','Formosa','Jujuy','La Pampa','La Rioja','Mendoza','Misiones','Neuquén','Río Negro','Salta','San Juan','San Luis','Santa Cruz','Santa Fe','Santiago del Estero','Tierra del Fuego','Tucumán'];
+const RUBROS = [['gruesa','Obra gruesa'],['aridos','Áridos'],['hierros','Hierros y mallas'],['ladrillos','Ladrillos y bloques'],['sanitarios','Sanitarios'],['electricidad','Electricidad'],['techos','Techos y maderas'],['terminaciones','Terminaciones']];
+
+const CATALOGO = [
+  // Obra gruesa
+  ['Cemento portland x 50 kg','bolsa','Obra gruesa'],['Cemento portland x 25 kg','bolsa','Obra gruesa'],['Cemento de albañilería x 40 kg','bolsa','Obra gruesa'],
+  ['Cal hidratada x 25 kg','bolsa','Obra gruesa'],['Cal aérea x 20 kg','bolsa','Obra gruesa'],['Mortero de asiento x 30 kg','bolsa','Obra gruesa'],
+  ['Hidrófugo x 10 L','balde','Obra gruesa'],['Hidrófugo x 20 L','balde','Obra gruesa'],['Aditivo plastificante x 5 L','bidón','Obra gruesa'],
+  ['Hormigón elaborado H-17','m³','Obra gruesa'],['Hormigón elaborado H-21','m³','Obra gruesa'],['Hormigón elaborado H-30','m³','Obra gruesa'],
+  // Áridos
+  ['Arena fina','m³','Áridos'],['Arena gruesa','m³','Áridos'],['Arena en bolsón','bolsón','Áridos'],['Piedra partida 6-20','m³','Áridos'],
+  ['Piedra partida 10-30','m³','Áridos'],['Canto rodado','m³','Áridos'],['Ripio','m³','Áridos'],['Tosca','m³','Áridos'],['Tierra negra','m³','Áridos'],
+  ['Granza','m³','Áridos'],['Cascote','m³','Áridos'],
+  // Hierros
+  ['Hierro aletado Ø4,2 mm x 12 m','barra','Hierros y mallas'],['Hierro aletado Ø6 mm x 12 m','barra','Hierros y mallas'],['Hierro aletado Ø8 mm x 12 m','barra','Hierros y mallas'],
+  ['Hierro aletado Ø10 mm x 12 m','barra','Hierros y mallas'],['Hierro aletado Ø12 mm x 12 m','barra','Hierros y mallas'],['Hierro aletado Ø16 mm x 12 m','barra','Hierros y mallas'],
+  ['Hierro aletado Ø20 mm x 12 m','barra','Hierros y mallas'],['Malla electrosoldada 15x15 Ø4,2','paño','Hierros y mallas'],['Malla electrosoldada 15x25 Ø6','paño','Hierros y mallas'],
+  ['Estribo 10x10 Ø4,2','u','Hierros y mallas'],['Alambre negro recocido N°16','kg','Hierros y mallas'],['Alambre galvanizado N°17','kg','Hierros y mallas'],
+  ['Clavos punta París 1½"','kg','Hierros y mallas'],['Clavos punta París 2"','kg','Hierros y mallas'],['Clavos punta París 2½"','kg','Hierros y mallas'],
+  ['Clavos punta París 3"','kg','Hierros y mallas'],['Perfil C 100x50 x 12 m','u','Hierros y mallas'],['Caño estructural 40x40 x 6 m','u','Hierros y mallas'],
+  // Ladrillos
+  ['Ladrillo común','u','Ladrillos y bloques'],['Ladrillo hueco 8x18x33','u','Ladrillos y bloques'],['Ladrillo hueco 12x18x33','u','Ladrillos y bloques'],
+  ['Ladrillo hueco 18x18x33','u','Ladrillos y bloques'],['Ladrillo portante 12x19x33','u','Ladrillos y bloques'],['Ladrillo portante 18x19x33','u','Ladrillos y bloques'],
+  ['Bloque de hormigón 10x20x40','u','Ladrillos y bloques'],['Bloque de hormigón 15x20x40','u','Ladrillos y bloques'],['Bloque de hormigón 20x20x40','u','Ladrillos y bloques'],
+  ['Vigueta pretensada','m','Ladrillos y bloques'],['Bovedilla cerámica','u','Ladrillos y bloques'],['Bovedilla de EPS (telgopor)','u','Ladrillos y bloques'],
+  ['Ladrillo de vidrio','u','Ladrillos y bloques'],
+  // Sanitarios
+  ['Caño PVC 110 mm x 4 m','u','Sanitarios'],['Caño PVC 63 mm x 4 m','u','Sanitarios'],['Caño PVC 50 mm x 4 m','u','Sanitarios'],['Caño PVC 40 mm x 4 m','u','Sanitarios'],
+  ['Codo PVC 110 mm 90°','u','Sanitarios'],['Codo PVC 110 mm 45°','u','Sanitarios'],['Ramal PVC 110 mm a 45°','u','Sanitarios'],['Pileta de patio','u','Sanitarios'],
+  ['Cámara de inspección 60x60','u','Sanitarios'],['Caño termofusión 20 mm x 4 m','u','Sanitarios'],['Caño termofusión 25 mm x 4 m','u','Sanitarios'],
+  ['Codo termofusión 20 mm','u','Sanitarios'],['Llave de paso ½"','u','Sanitarios'],['Tanque de agua 500 L','u','Sanitarios'],['Tanque de agua 1000 L','u','Sanitarios'],
+  ['Inodoro','u','Sanitarios'],['Lavatorio','u','Sanitarios'],['Grifería monocomando','u','Sanitarios'],['Pegamento para PVC','u','Sanitarios'],['Cinta de teflón','rollo','Sanitarios'],
+  // Electricidad
+  ['Caño corrugado ¾" x 25 m','rollo','Electricidad'],['Caño corrugado ⅞" x 25 m','rollo','Electricidad'],['Cable unipolar 1,5 mm² x 100 m','rollo','Electricidad'],
+  ['Cable unipolar 2,5 mm² x 100 m','rollo','Electricidad'],['Cable unipolar 4 mm² x 100 m','rollo','Electricidad'],['Cable tipo taller 2x1,5 mm²','m','Electricidad'],
+  ['Caja rectangular de embutir','u','Electricidad'],['Caja octogonal','u','Electricidad'],['Caja cuadrada','u','Electricidad'],['Tablero 12 módulos','u','Electricidad'],
+  ['Tablero 24 módulos','u','Electricidad'],['Disyuntor diferencial 2x40 A','u','Electricidad'],['Llave termomagnética 2x20 A','u','Electricidad'],
+  ['Tomacorriente doble','u','Electricidad'],['Interruptor de 1 punto','u','Electricidad'],['Jabalina 1,5 m','u','Electricidad'],['Cinta aisladora','u','Electricidad'],
+  // Techos y maderas
+  ['Chapa sinusoidal C25','m','Techos y maderas'],['Chapa trapezoidal T101 C25','m','Techos y maderas'],['Cumbrera','u','Techos y maderas'],
+  ['Tirante de pino 2x4" x 4 m','u','Techos y maderas'],['Tirante de pino 2x6" x 4 m','u','Techos y maderas'],['Tirante de pino 3x6" x 4 m','u','Techos y maderas'],
+  ['Tabla machihembrada 1x4"','m²','Techos y maderas'],['Fenólico 18 mm','placa','Techos y maderas'],['OSB 15 mm','placa','Techos y maderas'],
+  ['Membrana asfáltica 4 mm','rollo','Techos y maderas'],['Membrana líquida x 20 kg','balde','Techos y maderas'],['Aislante térmico con aluminio','rollo','Techos y maderas'],
+  ['Lana de vidrio 50 mm','rollo','Techos y maderas'],['Tornillo autoperforante para chapa','caja','Techos y maderas'],['Listón de pino 1x2"','u','Techos y maderas'],
+  // Terminaciones
+  ['Revoque grueso x 30 kg','bolsa','Terminaciones'],['Revoque fino x 30 kg','bolsa','Terminaciones'],['Yeso x 40 kg','bolsa','Terminaciones'],
+  ['Enduido x 25 kg','balde','Terminaciones'],['Pegamento cerámico x 30 kg','bolsa','Terminaciones'],['Pegamento para porcellanato x 30 kg','bolsa','Terminaciones'],
+  ['Pastina x 1 kg','u','Terminaciones'],['Cerámico piso 35x35','m²','Terminaciones'],['Porcellanato 60x60','m²','Terminaciones'],['Revestimiento 25x35','m²','Terminaciones'],
+  ['Placa de yeso 12,5 mm','placa','Terminaciones'],['Perfil montante 70 mm','u','Terminaciones'],['Perfil solera 70 mm','u','Terminaciones'],
+  ['Pintura látex interior x 20 L','lata','Terminaciones'],['Pintura látex exterior x 20 L','lata','Terminaciones'],['Fijador sellador x 20 L','lata','Terminaciones'],
+  // Varios
+  ['Nylon 200 micrones','m²','Varios'],['Carretilla','u','Varios'],['Pala ancha','u','Varios'],['Balde de albañil','u','Varios'],['Fratacho','u','Varios']
+];
+
+/* ============ HEADER + MENU ============ */
+const header = $('#siteHeader');
+const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 40);
+window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
+$('#menuBtn').addEventListener('click', () => openSheet($('#menuSheet')));
+$$('#menuSheet .sheet-link').forEach(a => a.addEventListener('click', e => {
+  closeSheet();
+  if (!a.classList.contains('anchor')) return;          // page links navigate normally
+  e.preventDefault();
+  const target = $(a.getAttribute('href'));
+  setTimeout(() => target && target.scrollIntoView({ behavior: 'smooth' }), 380);
+}));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSheet(); });
+
+/* ============ REVEAL + COUNTERS ============ */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add('is-visible');
+    $$('.counter', e.target).forEach(runCounter);
+    io.unobserve(e.target);
+  });
+}, { threshold: .12, rootMargin: '0px 0px -40px 0px' });
+function runCounter(el) {
+  const to = +el.dataset.to, dur = 1100, t0 = performance.now();
+  const step = t => { const p = Math.min((t - t0) / dur, 1); el.textContent = Math.max(0, Math.round(to * (1 - Math.pow(1 - p, 3)))); if (p < 1) requestAnimationFrame(step); };
+  el.textContent = '0'; requestAnimationFrame(step);
+}
+
+/* ============ ICONS (Lucide) ============ */
+const renderIcons = () => { if (window.lucide) lucide.createIcons({ attrs: { 'stroke-width': 2 } }); };
+renderIcons();
+
+/* ============ CORRALÓN AUTH ============ */
+const auth = $('#authSheet');
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+let authView = 'registro', authPrev = 'registro';
+
+function showAuthView(view, animate = true) {
+  const current = $(`.auth-view[data-view="${authView}"]`, auth);
+  const next = $(`.auth-view[data-view="${view}"]`, auth);
+  if (view !== 'recuperar' && view !== 'listo') authPrev = view;
+  // carry the email across views
+  const mail = current && $('input[type=email]', current);
+  const nextMail = $('input[type=email]', next);
+  if (mail && nextMail && mail.value && !nextMail.value) nextMail.value = mail.value;
+  const swap = () => {
+    $$('.auth-view', auth).forEach(v => { v.hidden = v !== next; v.classList.remove('auth-leave', 'auth-enter'); });
+    $$('[data-foot]', auth).forEach(f => f.hidden = f.dataset.foot !== view);
+    $('#authFoot').hidden = view === 'listo';
+    if (animate && !reduceMotion.matches) next.classList.add('auth-enter');
+    authView = view;
+    const first = $('input', next);
+    if (animate && first && !isPhone()) first.focus({ preventScroll: true });
+  };
+  if (animate && current && current !== next && !reduceMotion.matches) { current.classList.add('auth-leave'); setTimeout(swap, 150); }
+  else swap();
+}
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)');
+
+function openAuth(view = 'registro') {
+  $$('.fl', auth).forEach(f => f.classList.remove('invalid'));
+  showAuthView(view, false);
+  openSheet(auth);
+  if (!isPhone()) setTimeout(() => { const i = $(`.auth-view[data-view="${view}"] input`, auth); if (i) i.focus({ preventScroll: true }); }, 380);
+}
+if (window.CO) CO.decorarHeader();
+$$('[data-auth]').forEach(a => a.addEventListener('click', e => { if (!a.dataset.auth) return; e.preventDefault(); openAuth(a.dataset.auth); }));
+$('#authClose').addEventListener('click', () => closeSheet());
+let doneAction = null;
+$('#doneBtn').addEventListener('click', () => { if (doneAction) doneAction(); else closeSheet(); });
+auth.addEventListener('click', e => {
+  const g = e.target.closest('[data-goto]'); if (!g) return;
+  showAuthView(g.dataset.goto === 'back' ? authPrev : g.dataset.goto);
+});
+
+// show / hide password
+$$('.pw-toggle', auth).forEach(b => b.addEventListener('click', () => {
+  const input = $('#' + b.dataset.target), show = input.type === 'password';
+  input.type = show ? 'text' : 'password';
+  b.setAttribute('aria-pressed', String(show));
+  b.setAttribute('aria-label', show ? 'Ocultar contraseña' : 'Mostrar contraseña');
+}));
+
+// password strength
+const STRENGTH = [['Muy débil', '#dc2626'], ['Débil', '#f97316'], ['Aceptable', '#eab308'], ['Fuerte', '#16a34a']];
+$('#regPass').addEventListener('input', e => {
+  const v = e.target.value, box = $('#strength');
+  box.classList.toggle('hidden', !v);
+  let s = 0;
+  if (v.length >= 8) s++;
+  if (/[a-z]/.test(v) && /[A-Z]/.test(v)) s++;
+  if (/\d/.test(v)) s++;
+  if (/[^A-Za-z0-9]/.test(v) || v.length >= 12) s++;
+  const idx = Math.max(0, s - 1), [label, color] = STRENGTH[v.length < 8 ? 0 : idx];
+  $$('.strength span', box).forEach((bar, i) => bar.style.backgroundColor = i <= (v.length < 8 ? 0 : idx) ? color : '');
+  $('#strengthLabel').textContent = label;
+  $('#strengthLabel').style.color = color;
+});
+
+function setError(input, msg) {
+  const fl = input.closest('.fl'), err = fl.nextElementSibling;
+  fl.classList.toggle('invalid', !!msg);
+  if (msg) $('span', err).textContent = msg;
+  return !msg;
+}
+$$('.fl input', auth).forEach(i => i.addEventListener('input', () => i.closest('.fl').classList.remove('invalid')));
+
+function fakeSubmit(form, label, done) {
+  const btn = $('.auth-submit', form), text = btn.innerHTML;
+  btn.disabled = true; btn.classList.add('opacity-90');
+  btn.innerHTML = `<span class="spinner"></span><span>${label}</span>`;
+  setTimeout(() => { btn.disabled = false; btn.classList.remove('opacity-90'); btn.innerHTML = text; done(); }, 900);
+}
+function showDone(title, text, btn = 'Entendido', action = null) { $('#doneTitle').textContent = title; $('#doneText').textContent = text; $('#doneBtn').textContent = btn; doneAction = action; showAuthView('listo'); }
+
+$('.auth-view[data-view="registro"]', auth).addEventListener('submit', e => {
+  e.preventDefault();
+  const em = $('#regEmail'), pw = $('#regPass');
+  const ok1 = setError(em, !em.value.trim() ? 'Ingresá tu email.' : !EMAIL_RE.test(em.value.trim()) ? 'Revisá el formato del email.' : '');
+  const ok2 = setError(pw, !pw.value ? 'Elegí una contraseña.' : pw.value.length < 8 ? 'Tiene que tener al menos 8 caracteres.' : '');
+  if (!ok1 || !ok2) { $('.invalid input', auth).focus(); return; }
+  fakeSubmit(e.target, 'Creando cuenta…', () => {
+    const r = window.CO ? CO.corralonRegistrar(em.value.trim(), pw.value) : { ok: true };
+    if (!r.ok) { setError(em, r.error); em.focus(); return; }
+    showDone('¡Cuenta creada!', 'Ahora completá los datos de tu corralón (nombre, zona de entrega y rubros) para empezar a recibir pedidos de tu zona.', 'Ir a mi panel', () => { CO.ir('panel-corralon.html'); });
+  });
+});
+$('.auth-view[data-view="ingreso"]', auth).addEventListener('submit', e => {
+  e.preventDefault();
+  const em = $('#logEmail'), pw = $('#logPass');
+  const ok1 = setError(em, !em.value.trim() ? 'Ingresá tu email.' : !EMAIL_RE.test(em.value.trim()) ? 'Revisá el formato del email.' : '');
+  const ok2 = setError(pw, !pw.value ? 'Ingresá tu contraseña.' : '');
+  if (!ok1 || !ok2) { $('.invalid input', auth).focus(); return; }
+  fakeSubmit(e.target, 'Ingresando…', () => {
+    const r = window.CO ? CO.corralonIngresar(em.value.trim(), pw.value) : { ok: false, error: 'No disponible' };
+    if (!r.ok) { setError(pw, r.error); pw.focus(); return; }
+    CO.ir('panel-corralon.html');
+  });
+});
+$('.auth-view[data-view="recuperar"]', auth).addEventListener('submit', e => {
+  e.preventDefault();
+  const em = $('#recEmail');
+  if (!setError(em, !em.value.trim() ? 'Ingresá tu email.' : !EMAIL_RE.test(em.value.trim()) ? 'Revisá el formato del email.' : '')) { em.focus(); return; }
+  fakeSubmit(e.target, 'Enviando…', () => showDone('Revisá tu correo', `Si ${em.value.trim()} está registrado, te enviamos un link para crear una contraseña nueva.`));
+});
+
+/* ============ SWIPER (auth photos) ============ */
+if (window.Swiper) new Swiper('.swiper-auth', {
+  effect: 'fade', fadeEffect: { crossFade: true }, loop: true, speed: 900, allowTouchMove: false,
+  autoplay: { delay: 4500, disableOnInteraction: false },
+  pagination: { el: '.auth-pag', clickable: true }, observer: true, observeParents: true
+});
+/* ============ PEDIR COTIZACIÓN ============ */
+const UNIDADES = ['u','bolsa','m³','m²','m','kg','barra','rollo','lata','placa','paño','bolsón','balde','bidón','caja','L'];
+const TIPO_LABEL = { particular: 'Particular', constructora: 'Constructora', estudio: 'Estudio de arquitectura' };
+const RUBRO_CAT = { gruesa: 'Obra gruesa', aridos: 'Áridos', hierros: 'Hierros y mallas', ladrillos: 'Ladrillos y bloques', sanitarios: 'Sanitarios', electricidad: 'Electricidad', techos: 'Techos y maderas', terminaciones: 'Terminaciones' };
+const POPULARES = ['Cemento portland x 50 kg','Arena gruesa','Hierro aletado Ø8 mm x 12 m','Ladrillo hueco 18x18x33','Cal hidratada x 25 kg','Piedra partida 6-20','Malla electrosoldada 15x15 Ø4,2','Hidrófugo x 20 L'];
+const norm = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ø/g, ' ');
+const CAT_INDEX = CATALOGO.map(([n, u, c]) => ({ n, u, c, k: norm(n + ' ' + c) }));
+const UNIT_OF = Object.fromEntries(CATALOGO.map(([n, u]) => [norm(n), u]));
+
+/* ---------- Search ---------- */
+const SEARCH_STOP = new Set(['de', 'del', 'la', 'el', 'los', 'las', 'x', 'para', 'con', 'en']);
+function searchCatalog(q, limit = 7) {
+  // ignora plurales y palabras de relleno: "ladrillos huecos", "hierro del 10"
+  const tokens = norm(q).split(/\s+/).filter(t => t && !SEARCH_STOP.has(t)).map(t => t.length > 4 ? t.replace(/(es|s)$/, '') : t);
+  if (!tokens.length) return [];
+  const nums = tokens.filter(t => /^\d/.test(t));
+  const esc2 = t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return CAT_INDEX
+    .filter(it => tokens.every(t => it.k.includes(t)))
+    .map(it => {
+      const nn = norm(it.n);
+      // los números tienen que empezar una medida (18 → 18x18x33, no 8x18x33)…
+      const numHit = nums.length && nums.every(t => new RegExp('(^|[^0-9a-z])' + esc2(t)).test(nn));
+      // …y la primera medida del material es la que manda (hierro 12 → Ø12, no Ø6 x 12 m)
+      const first = (nn.match(/\d+(?:,\d+)?/) || [''])[0];
+      const firstHit = nums.length && first === nums[0];
+      return { ...it, score: (nn.startsWith(tokens[0]) ? 0 : 1) - (numHit ? 0.6 : 0) - (firstHit ? 0.8 : 0) + it.n.length / 100 };
+    })
+    .sort((a, b) => a.score - b.score)
+    .slice(0, limit);
+}
+function highlight(text, q) {
+  let out = esc(text);
+  norm(q).split(/\s+/).filter(t => t && !SEARCH_STOP.has(t)).map(t => t.length > 4 ? t.replace(/(es|s)$/, '') : t).forEach(t => {
+    const nt = norm(text); const i = nt.indexOf(t);
+    if (i < 0) return;
+    const raw = text.slice(i, i + t.length);
+    out = out.replace(esc(raw), `<mark>${esc(raw)}</mark>`);
+  });
+  return out;
+}
+
+/* ---------- Rows ---------- */
+let rowSeq = 0;
+function rowHTML(id, d) {
+  return `
+    <div class="grid grid-cols-12 items-center gap-2 sm:gap-3">
+      <div class="col-span-12 flex items-center gap-2 sm:col-span-7">
+        <span class="m-idx grid h-6 w-6 shrink-0 place-items-center rounded-full bg-sand text-[11px] font-black text-stone-500 tabular-nums"></span>
+        <div class="relative min-w-0 flex-1">
+          <input class="m-name field" placeholder="Ej.: cemento, hierro del 8, arena…" value="${esc(d.name || '')}" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="ac-${id}" aria-label="Material" enterkeyhint="next" />
+          <div id="ac-${id}" class="ac-list hidden" role="listbox"></div>
+        </div>
+        <button type="button" class="m-del grid h-10 w-10 shrink-0 place-items-center rounded-full text-stone-400 hover:bg-brand-50 hover:text-brand-600 sm:hidden" aria-label="Quitar material"><i data-lucide="trash-2" class="h-4 w-4"></i></button>
+      </div>
+      <div class="col-span-6 pl-8 sm:col-span-2 sm:pl-0">
+        <input class="m-qty field tabular-nums" type="text" inputmode="decimal" placeholder="Cantidad" value="${esc(d.qty || '')}" aria-label="Cantidad" enterkeyhint="next" />
+      </div>
+      <div class="col-span-6 sm:col-span-2">
+        <select class="m-unit field" aria-label="Unidad">${UNIDADES.map(u => `<option ${u === (d.unit || 'u') ? 'selected' : ''}>${u}</option>`).join('')}</select>
+      </div>
+      <div class="hidden justify-end sm:col-span-1 sm:flex">
+        <button type="button" class="m-del grid h-10 w-10 place-items-center rounded-full text-stone-400 hover:bg-brand-50 hover:text-brand-600" aria-label="Quitar material"><i data-lucide="trash-2" class="h-4 w-4"></i></button>
+      </div>
+    </div>`;
+}
+function addRow(d = {}, { focus = false, animate = true } = {}) {
+  const id = ++rowSeq;
+  const row = document.createElement('div');
+  row.className = 'mat-row rounded-2xl border border-stone-200 p-3 sm:rounded-none sm:border-0 sm:px-0 sm:py-3' + (animate ? ' row-enter' : '');
+  row.dataset.id = id;
+  row.innerHTML = rowHTML(id, d);
+  $('#rows').appendChild(row);
+  bindRow(row);
+  renumber();
+  renderIcons();
+  if (focus) $('.m-name', row).focus();
+  return row;
+}
+function renumber() { $$('.mat-row').forEach((r, i) => $('.m-idx', r).textContent = i + 1); }
+function getItems() {
+  return $$('.mat-row').map(r => ({ row: r, name: $('.m-name', r).value.trim(), qty: $('.m-qty', r).value.trim(), unit: $('.m-unit', r).value }))
+    .filter(i => i.name || i.qty);
+}
+function firstEmptyRow() { return $$('.mat-row').find(r => !$('.m-name', r).value.trim() && !$('.m-qty', r).value.trim()); }
+function removeRow(row) {
+  if ($$('.mat-row').length <= 1) { $$('input', row).forEach(i => i.value = ''); $('.m-unit', row).value = 'u'; update(); return; }
+  row.classList.add('row-leave');
+  setTimeout(() => { row.remove(); renumber(); update(); }, 180);
+}
+
+/* ---------- Autocomplete ---------- */
+function bindRow(row) {
+  const name = $('.m-name', row), qty = $('.m-qty', row), unit = $('.m-unit', row), list = $('.ac-list', row);
+  let results = [], active = -1;
+  unit.dataset.touched = '';
+  const close = () => { list.classList.add('hidden'); name.setAttribute('aria-expanded', 'false'); active = -1; };
+  const open = () => {
+    const q = name.value.trim();
+    results = q.length >= 2 ? searchCatalog(q) : [];
+    if (!results.length) { close(); return; }
+    list.innerHTML = results.map((r, i) => `<div class="ac-item" role="option" id="opt-${row.dataset.id}-${i}" data-i="${i}" aria-selected="${i === active}"><span>${highlight(r.n, q)}</span><small>${esc(r.u)}</small></div>`).join('')
+      + `<p class="ac-free">¿No está? Dejalo como lo escribiste.</p>`;
+    list.classList.remove('hidden'); name.setAttribute('aria-expanded', 'true');
+  };
+  const pick = i => {
+    const r = results[i]; if (!r) return;
+    name.value = r.n;
+    if (!unit.dataset.touched) unit.value = r.u;
+    close(); qty.focus(); update();
+  };
+  const setActive = i => {
+    active = (i + results.length) % results.length;
+    $$('.ac-item', list).forEach((el, k) => el.setAttribute('aria-selected', String(k === active)));
+    name.setAttribute('aria-activedescendant', `opt-${row.dataset.id}-${active}`);
+    const el = $(`.ac-item[data-i="${active}"]`, list); if (el) el.scrollIntoView({ block: 'nearest' });
+  };
+  name.addEventListener('input', () => { active = -1; open(); row.classList.remove('invalid-row'); name.classList.remove('invalid'); update(); });
+  name.addEventListener('focus', () => { if (name.value.trim().length >= 2) open(); });
+  name.addEventListener('blur', () => setTimeout(close, 120));
+  name.addEventListener('keydown', e => {
+    const isOpen = !list.classList.contains('hidden');
+    if (e.key === 'ArrowDown' && isOpen) { e.preventDefault(); setActive(active + 1); }
+    else if (e.key === 'ArrowUp' && isOpen) { e.preventDefault(); setActive(active - 1); }
+    else if (e.key === 'Enter') { e.preventDefault(); if (isOpen && active >= 0) pick(active); else { close(); qty.focus(); } }
+    else if (e.key === 'Escape' && isOpen) { e.stopPropagation(); close(); }
+  });
+  list.addEventListener('pointerdown', e => { const it = e.target.closest('.ac-item'); if (it) { e.preventDefault(); pick(+it.dataset.i); } });
+  name.addEventListener('change', () => { const u = UNIT_OF[norm(name.value.trim())]; if (u && !unit.dataset.touched) unit.value = u; update(); });
+  qty.addEventListener('input', () => { qty.value = qty.value.replace(/[^\d.,]/g, ''); qty.classList.remove('invalid'); update(); });
+  qty.addEventListener('keydown', e => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    const rows = $$('.mat-row'), idx = rows.indexOf(row);
+    const next = rows[idx + 1];
+    if (next) $('.m-name', next).focus(); else addRow({}, { focus: true });
+  });
+  unit.addEventListener('change', () => { unit.dataset.touched = '1'; update(); });
+  $$('.m-del', row).forEach(b => b.addEventListener('click', () => removeRow(row)));
+}
+
+/* ---------- Quick chips ---------- */
+function renderQuick(cat) {
+  const items = cat ? CATALOGO.filter(c => c[2] === cat).slice(0, 8).map(c => c[0]) : POPULARES;
+  $('#quickTitle').textContent = cat ? `Lo más pedido en ${cat}` : 'Lo más pedido';
+  $('#quickChips').innerHTML = items.map(n => `<button type="button" class="chip-add inline-flex items-center gap-1.5 rounded-full bg-sand px-3.5 py-2 text-xs font-semibold text-stone-700 hover:bg-brand-600 hover:text-white" data-add="${esc(n)}"><i data-lucide="plus" class="h-3.5 w-3.5"></i>${esc(n)}</button>`).join('');
+  renderIcons();
+}
+$('#quickChips').addEventListener('click', e => {
+  const b = e.target.closest('[data-add]'); if (!b) return;
+  const n = b.dataset.add, u = UNIT_OF[norm(n)] || 'u';
+  const row = firstEmptyRow() || addRow();
+  $('.m-name', row).value = n; $('.m-unit', row).value = u;
+  $('.m-qty', row).focus({ preventScroll: !isPhone() });
+  update();
+  toast('Material agregado', { type: 'success', desc: `${n} · completá la cantidad` });
+});
+
+/* ---------- Paste a list ---------- */
+const UNIT_WORDS = [
+  [/^(bolsas?|bol\.?)$/, 'bolsa'], [/^(m3|m³|mts3|metros?3?)$/, 'm³'], [/^(m2|m²|mts2)$/, 'm²'], [/^(ml|mts|metros?|m)$/, 'm'],
+  [/^(kg|kilos?|kgs)$/, 'kg'], [/^(barras?|bar\.?)$/, 'barra'], [/^(rollos?)$/, 'rollo'], [/^(latas?)$/, 'lata'], [/^(placas?)$/, 'placa'],
+  [/^(paños?|panos?)$/, 'paño'], [/^(bolsones?)$/, 'bolsón'], [/^(baldes?)$/, 'balde'], [/^(bidones?|bidón)$/, 'bidón'], [/^(cajas?)$/, 'caja'],
+  [/^(u|un|unid\.?|unidades?|uds?)$/, 'u'], [/^(litros?|l|lts)$/, 'L']
+];
+function parseLine(line) {
+  const m = line.trim().replace(/^[-•*·]\s*/, '').match(/^(\d+(?:[.,]\d+)?)\s*(\S+)?\s*(?:de\s+)?(.*)$/i);
+  if (!m) return { name: line.trim(), qty: '', unit: 'u' };
+  let [, qty, w, rest] = m, unit = null;
+  if (w) { const nw = norm(w); for (const [re, u] of UNIT_WORDS) if (re.test(nw)) { unit = u; break; } }
+  let name = unit ? rest : [w, rest].filter(Boolean).join(' ');
+  name = name.replace(/^de\s+/i, '').trim();
+  const best = name ? searchCatalog(name, 1)[0] : null;
+  return { name: name.charAt(0).toUpperCase() + name.slice(1), qty, unit: unit || (best ? best.u : 'u') };
+}
+$('#pasteToggle').addEventListener('click', () => { $('#pasteBox').classList.toggle('hidden'); if (!$('#pasteBox').classList.contains('hidden')) $('#pasteArea').focus(); });
+$('#pasteApply').addEventListener('click', () => {
+  const lines = $('#pasteArea').value.split('\n').map(l => l.trim()).filter(Boolean);
+  if (!lines.length) { toast('No hay nada para cargar', { desc: 'Pegá una lista con un material por línea.' }); return; }
+  lines.map(parseLine).forEach(d => {
+    const row = firstEmptyRow();
+    if (row) { $('.m-name', row).value = d.name; $('.m-qty', row).value = d.qty; $('.m-unit', row).value = d.unit; }
+    else addRow(d);
+  });
+  $('#pasteArea').value = ''; $('#pasteBox').classList.add('hidden');
+  update();
+  toast(`${lines.length} material${lines.length > 1 ? 'es' : ''} cargado${lines.length > 1 ? 's' : ''}`, { type: 'success', desc: 'Revisá cantidades y unidades antes de enviar.' });
+});
+
+
+/* ---------- Subir la lista desde una planilla (Excel / CSV) ---------- */
+const XLSX_URL = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+let xlsxLib = null;
+const loadXLSX = () => xlsxLib || (xlsxLib = new Promise((ok, fail) => { if (window.XLSX) return ok(); const sc = document.createElement('script'); sc.src = XLSX_URL; sc.onload = ok; sc.onerror = () => { xlsxLib = null; fail(new Error('xlsx')); }; document.head.appendChild(sc); }));
+const toNum = v => { if (typeof v === 'number') return v; let t = String(v || '').trim().replace(/[^\d.,-]/g, ''); if (!t) return NaN; if (t.includes(',') && t.includes('.')) t = t.lastIndexOf(',') > t.lastIndexOf('.') ? t.replace(/\./g, '').replace(',', '.') : t.replace(/,/g, ''); else t = t.replace(',', '.'); return parseFloat(t); };
+const unitOf = w => { const nw = norm(String(w || '').trim()); if (!nw) return null; for (const [re, u] of UNIT_WORDS) if (re.test(nw)) return u; return UNIDADES.includes(String(w).trim()) ? String(w).trim() : null; };
+function planillaAItems(rows) {
+  rows = rows.map(r => r.map(c => (c == null ? '' : c))).filter(r => r.some(c => String(c).trim() !== ''));
+  if (!rows.length) return { items: [], skipped: 0 };
+  // 1) ¿hay una fila de títulos?
+  let hdr = -1, nameC = -1, qtyC = -1, unitC = -1;
+  for (let i = 0; i < Math.min(rows.length, 10) && hdr < 0; i++) {
+    rows[i].forEach((c, j) => { const t = norm(String(c));
+      if (/(material|descrip|articulo|producto|detalle|insumo|concepto)/.test(t)) nameC = j;
+      else if (nameC < 0 && /^item/.test(t)) nameC = j;
+      else if (qtyC < 0 && /(cant|cnt|qty|cantidad)/.test(t)) qtyC = j;
+      else if (unitC < 0 && /^(u|un|unid|unidad|unidades|um|u\.?m\.?|medida)$|unidad/.test(t)) unitC = j; });
+    if (nameC >= 0 && (qtyC >= 0 || unitC >= 0)) hdr = i; else { nameC = qtyC = unitC = -1; }
+  }
+  const body = rows.slice(hdr + 1);
+  if (hdr >= 0) {                                    // si la columna elegida es solo numeración (1, 2, 3…), usar la de texto de al lado
+    const numish = j => body.filter(r => String(r[j] ?? '').trim()).every(r => /^[\s\d.,]+$/.test(String(r[j])));
+    if (numish(nameC)) { const alt = rows[hdr].findIndex((c, j) => j !== qtyC && j !== unitC && j !== nameC && !numish(j)); if (alt >= 0) nameC = alt; }
+  }
+  // 2) sin títulos: la columna con más texto es el material; la más numérica, la cantidad
+  if (hdr < 0) {
+    const cols = Math.max(...body.map(r => r.length)), score = [];
+    for (let j = 0; j < cols; j++) { let txt = 0, num = 0, un = 0; body.forEach(r => { const v = r[j]; if (v === '' || v == null) return; if (!isNaN(toNum(v)) && /^[\s\d.,]+$/.test(String(v))) num++; else if (unitOf(v)) un++; else txt++; }); score.push({ j, txt, num, un }); }
+    nameC = [...score].sort((a, b) => b.txt - a.txt)[0].j;
+    const q = [...score].filter(x => x.j !== nameC).sort((a, b) => b.num - a.num)[0]; qtyC = q && q.num ? q.j : -1;
+    const u = [...score].filter(x => x.j !== nameC && x.j !== qtyC).sort((a, b) => b.un - a.un)[0]; unitC = u && u.un ? u.j : -1;
+  }
+  let skipped = 0;
+  const items = [];
+  body.forEach(r => {
+    const raw = String(r[nameC] ?? '').trim();
+    if (!raw || /^(sub)?total|^importe|^precio/i.test(raw)) { if (raw) skipped++; return; }
+    let qty = qtyC >= 0 ? toNum(r[qtyC]) : NaN, unit = unitC >= 0 ? unitOf(r[unitC]) : null, name = raw;
+    if (isNaN(qty)) { const d = parseLine(raw); if (d.qty) { qty = toNum(d.qty); name = d.name; unit = unit || d.unit; } }
+    if (!unit) { const best = searchCatalog(name, 1)[0]; unit = best ? best.u : 'u'; }
+    items.push({ name: name.charAt(0).toUpperCase() + name.slice(1), qty: isNaN(qty) ? '' : String(Math.round(qty * 100) / 100).replace('.', ','), unit });
+  });
+  return { items: items.slice(0, 300), skipped };
+}
+async function leerPlanilla(file) {
+  if (!file) return;
+  if (!/\.(xlsx|xls|csv|ods)$/i.test(file.name)) { toast('Ese archivo no es una planilla', { type: 'error', desc: 'Subí un Excel (.xlsx o .xls), .ods o .csv.' }); return; }
+  if (file.size > 8 * 1024 * 1024) { toast('El archivo es muy pesado', { type: 'error', desc: 'Probá con uno de menos de 8 MB.' }); return; }
+  const t = toast('Leyendo tu planilla…', { desc: file.name });
+  try {
+    await loadXLSX();
+    const wb = XLSX.read(await file.arrayBuffer(), { type: 'array' });
+    let best = { items: [], skipped: 0 }, hoja = '';
+    wb.SheetNames.forEach(n => { const r = planillaAItems(XLSX.utils.sheet_to_json(wb.Sheets[n], { header: 1, raw: true, defval: '' })); if (r.items.length > best.items.length) { best = r; hoja = n; } });
+    if (!best.items.length) { dismissToast(t); toast('No encontramos materiales', { type: 'error', desc: 'Revisá que haya una columna con los materiales y otra con la cantidad.' }); return; }
+    dismissToast(t); planillaPreview(file.name, hoja, wb.SheetNames.length, best);
+  } catch (err) { dismissToast(t); toast('No pudimos leer el archivo', { type: 'error', desc: 'Probá guardarlo como .xlsx o .csv y subilo de nuevo.' }); }
+}
+let planillaPend = null;
+function planillaPreview(fname, hoja, nHojas, r) {
+  planillaPend = r.items;
+  const sinCant = r.items.filter(i => !i.qty).length;
+  $('#modalKicker').textContent = 'Desde tu planilla';
+  $('#modalTitle').textContent = `${r.items.length} material${r.items.length > 1 ? 'es' : ''} encontrado${r.items.length > 1 ? 's' : ''}`;
+  $('#modalBody').innerHTML = `
+    <p class="flex items-center gap-2 text-sm text-stone-600"><i data-lucide="file-spreadsheet" class="h-4 w-4 text-emerald-700"></i><b class="text-ink">${esc(fname)}</b>${nHojas > 1 ? ` · hoja “${esc(hoja)}”` : ''}</p>
+    <div class="mt-4 max-h-[46vh] overflow-y-auto rounded-2xl ring-1 ring-stone-200">
+      <table class="w-full text-sm"><thead class="sticky top-0 bg-stone-50 text-left text-[11px] font-bold uppercase tracking-wider text-stone-500"><tr><th class="px-4 py-2.5">Material</th><th class="px-3 py-2.5 text-right">Cantidad</th><th class="px-4 py-2.5">Unidad</th></tr></thead>
+      <tbody class="divide-y divide-stone-100">${r.items.map(i => `<tr><td class="px-4 py-2.5 font-semibold">${esc(i.name)}</td><td class="px-3 py-2.5 text-right tabular-nums ${i.qty ? '' : 'text-amber-700'}">${i.qty || 'falta'}</td><td class="px-4 py-2.5 text-stone-600">${esc(i.unit)}</td></tr>`).join('')}</tbody></table>
+    </div>
+    ${sinCant || r.skipped ? `<p class="mt-3 text-xs text-stone-600">${sinCant ? `${sinCant} sin cantidad: completala después en la lista. ` : ''}${r.skipped ? `Salteamos ${r.skipped} fila${r.skipped > 1 ? 's' : ''} de totales o precios.` : ''}</p>` : ''}
+    <div class="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+      <button type="button" class="modal-ok inline-flex h-12 items-center justify-center rounded-full border border-stone-200 px-6 text-sm font-bold hover:border-ink">Cancelar</button>
+      <button type="button" id="xlsReplace" class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-sand px-5 text-sm font-bold hover:bg-stone-200"><i data-lucide="replace" class="h-4 w-4"></i>Reemplazar mi lista</button>
+      <button type="button" id="xlsAdd" class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-brand-600 px-6 text-sm font-bold text-white hover:bg-brand-700"><i data-lucide="list-plus" class="h-4 w-4"></i>Sumar a mi lista</button>
+    </div>`;
+  renderIcons(); openSheet($('#modalCard'));
+}
+$('#modalCard').addEventListener('click', e => {
+  const add = e.target.closest('#xlsAdd'), repl = e.target.closest('#xlsReplace');
+  if (!(add || repl) || !planillaPend) return;
+  const n = planillaPend.length; loadItems(planillaPend, !!repl); planillaPend = null; closeSheet();
+  toast(`Cargamos ${n} material${n > 1 ? 'es' : ''}`, { type: 'success', desc: 'Revisá cantidades y unidades antes de enviar.' });
+  setTimeout(() => $('#rows').scrollIntoView({ behavior: 'smooth', block: 'center' }), 350);
+});
+$('#xlsBtn').addEventListener('click', () => { $('#xlsInput').click(); loadXLSX().catch(() => {}); });
+$('#xlsInput').addEventListener('change', e => { const f = e.target.files[0]; e.target.value = ''; leerPlanilla(f); });
+(function dropPlanilla() {
+  let depth = 0; const ov = $('#dropOverlay');
+  const hasFile = e => e.dataTransfer && [...e.dataTransfer.types].includes('Files');
+  addEventListener('dragenter', e => { if (!hasFile(e)) return; e.preventDefault(); depth++; ov.classList.remove('hidden'); ov.classList.add('flex'); });
+  addEventListener('dragover', e => { if (hasFile(e)) e.preventDefault(); });
+  addEventListener('dragleave', () => { depth = Math.max(0, depth - 1); if (!depth) { ov.classList.add('hidden'); ov.classList.remove('flex'); } });
+  addEventListener('drop', e => { if (!hasFile(e)) return; e.preventDefault(); depth = 0; ov.classList.add('hidden'); ov.classList.remove('flex'); leerPlanilla(e.dataTransfer.files[0]); });
+})();
+
+$('#addRow').addEventListener('click', () => addRow({}, { focus: true }));
+$('#add5').addEventListener('click', () => { for (let i = 0; i < 5; i++) addRow(); toast('Agregamos 5 filas', { desc: 'Las filas vacías no se envían.' }); });
+$('#clearAll').addEventListener('click', () => {
+  const snapshot = getItems().map(({ name, qty, unit }) => ({ name, qty, unit }));
+  if (!snapshot.length) return;
+  $('#rows').innerHTML = ''; for (let i = 0; i < 5; i++) addRow({}, { animate: false });
+  update();
+  toast('Lista vaciada', { desc: `Se quitaron ${snapshot.length} materiales.`, action: { label: 'Deshacer', onClick: () => {
+    $('#rows').innerHTML = ''; snapshot.forEach(d => addRow(d, { animate: false }));
+    for (let i = snapshot.length; i < 5; i++) addRow({}, { animate: false });
+    update();
+  } } });
+});
+
+/* ---------- Tipo / summary ---------- */
+const currentTipo = () => $('input[name=tipo]:checked').value;
+function onTipo() {
+  const t = currentTipo();
+  $('#empresaWrap').classList.toggle('hidden', t === 'particular');
+  $('#empresaLabel').textContent = t === 'estudio' ? 'Estudio' : 'Empresa';
+  update();
+}
+$$('input[name=tipo]').forEach(r => r.addEventListener('change', onTipo));
+const fmtDate = v => { if (!v) return '—'; const [y, m, d] = v.split('-'); return `${d}/${m}/${y}`; };
+function countTween(el, to) {
+  const from = +(el.dataset.val ?? to); el.dataset.val = to;
+  if (from === to || matchMedia('(prefers-reduced-motion: reduce)').matches) { el.textContent = to; return; }
+  cancelAnimationFrame(el._raf); const t0 = performance.now();
+  const step = t => { const p = Math.min((t - t0) / 350, 1); el.textContent = Math.round(from + (to - from) * (1 - Math.pow(1 - p, 4))); if (p < 1) el._raf = requestAnimationFrame(step); };
+  el._raf = requestAnimationFrame(step);
+}
+let saveTimer = null;
+function update() {
+  const n = getItems().filter(i => i.name).length;
+  $$('.sum-count').forEach(el => countTween(el, n));
+  $$('.sum-word').forEach(el => el.textContent = n === 1 ? 'material' : 'materiales');
+  $('#itemCountBadge').textContent = `${n} material${n === 1 ? '' : 'es'}`;
+  $('#sumTipo').textContent = TIPO_LABEL[currentTipo()];
+  const lugar = [$('#localidad').value.trim(), $('#provincia').value].filter(Boolean).join(', ');
+  $('#sumLugar').textContent = lugar || '—';
+  $('#sumFecha').textContent = fmtDate($('#fecha').value);
+  $('#mobileHint').textContent = n ? [lugar, $('#fecha').value && 'Entrega ' + fmtDate($('#fecha').value)].filter(Boolean).join(' · ') || 'Completá obra y contacto' : 'Cargá lo que necesitás';
+  clearTimeout(saveTimer); saveTimer = setTimeout(saveDraft, 500);
+}
+['#provincia','#localidad','#direccion','#fecha','#acceso','#notas','#nombre','#apellido','#empresa','#email','#telefono'].forEach(s => {
+  $(s).addEventListener('input', () => { $(s).classList.remove('invalid'); update(); });
+});
+
+/* ---------- Draft (this device only) ---------- */
+const DRAFT_KEY = 'cotizaobra:pedido';
+const FIELDS = ['provincia','localidad','direccion','fecha','acceso','notas','nombre','apellido','empresa','email','telefono'];
+function saveDraft() {
+  try {
+    const data = { tipo: currentTipo(), items: getItems().map(({ name, qty, unit }) => ({ name, qty, unit })), f: Object.fromEntries(FIELDS.map(k => [k, $('#' + k).value])) };
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(data));
+    const s = $('#saveState'); s.classList.remove('opacity-0'); clearTimeout(s._t); s._t = setTimeout(() => s.classList.add('opacity-0'), 2200);
+  } catch (e) { /* storage unavailable: the form still works */ }
+}
+function loadDraft() {
+  try { return JSON.parse(localStorage.getItem(DRAFT_KEY) || 'null'); } catch (e) { return null; }
+}
+function clearDraft() { try { localStorage.removeItem(DRAFT_KEY); } catch (e) {} }
+
+/* ---------- Validation ---------- */
+const EMAIL_OK = v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+function validate() {
+  const errs = [];
+  const mark = (el, ok) => { el.classList.toggle('invalid', !ok); if (!ok) errs.push(el); };
+  const items = getItems();
+  if (!items.some(i => i.name && i.qty)) {
+    toast('Tu lista está vacía', { type: 'error', desc: 'Cargá al menos un material con su cantidad.' });
+    const r = $$('.mat-row')[0]; if (r) $('.m-name', r).focus();
+    return false;
+  }
+  items.forEach(i => {
+    mark($('.m-name', i.row), !!i.name);
+    mark($('.m-qty', i.row), +i.qty.replace(',', '.') > 0);
+  });
+  mark($('#provincia'), !!$('#provincia').value);
+  mark($('#localidad'), !!$('#localidad').value.trim());
+  mark($('#fecha'), !!$('#fecha').value && $('#fecha').value >= $('#fecha').min);
+  mark($('#nombre'), !!$('#nombre').value.trim());
+  mark($('#apellido'), !!$('#apellido').value.trim());
+  if (currentTipo() !== 'particular') mark($('#empresa'), !!$('#empresa').value.trim());
+  mark($('#email'), EMAIL_OK($('#email').value.trim()));
+  mark($('#telefono'), $('#telefono').value.replace(/\D/g, '').length >= 8);
+  if (errs.length) {
+    toast('Faltan algunos datos', { type: 'error', desc: 'Revisá los campos marcados en rojo.' });
+    errs[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => errs[0].focus({ preventScroll: true }), 400);
+    return false;
+  }
+  if (!$('#acepto').checked) { toast('Falta tu confirmación', { type: 'error', desc: 'Aceptá el envío a los corralones de la zona.' }); $('#acepto').focus(); return false; }
+  return true;
+}
+
+/* ---------- Order preview ---------- */
+function orderHTML(sent) {
+  const items = getItems().filter(i => i.name);
+  const loc = [$('#localidad').value.trim(), $('#provincia').value].filter(Boolean).join(', ') || 'Sin indicar';
+  const empresa = currentTipo() !== 'particular' && $('#empresa').value.trim() ? ` · ${esc($('#empresa').value.trim())}` : '';
+  const blank = '<span class="text-brand-400">$ ______</span>';
+  return `
+    ${sent ? `<div class="mb-4 flex items-start gap-4 rounded-2xl bg-emerald-50 p-5 text-emerald-800">
+      <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-emerald-500 text-white"><i data-lucide="check" class="h-5 w-5"></i></span>
+      <div><p class="font-extrabold">¡Pedido enviado!</p><p class="text-sm">Lo recibieron ${sent.dest} corralones adheridos que entregan en ${esc(loc)}. Te avisamos por email cuando lleguen los presupuestos.</p></div>
+    </div>
+    ${sent.pin ? `<div class="mb-6 overflow-hidden rounded-2xl bg-brand-50 ring-1 ring-brand-100">
+      <div class="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p class="flex items-center gap-2 text-[11px] font-bold uppercase tracking-[.16em] text-brand-700/70"><i data-lucide="key-round" class="h-4 w-4 text-brand-600"></i>Tu PIN de acceso</p>
+          <p id="pinValue" class="mt-1 font-mono text-4xl font-black tracking-[.25em] tabular-nums">${sent.pin.slice(0,3)} ${sent.pin.slice(3)}</p>
+        </div>
+        <button type="button" id="copyPin" data-pin="${sent.pin}" class="inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-bold ring-1 ring-brand-100 hover:ring-brand-300"><i data-lucide="copy" class="h-4 w-4"></i>Copiar PIN</button>
+      </div>
+      <p class="border-t border-brand-100 px-5 py-3 text-xs leading-relaxed text-stone-600">Guardalo: con <b class="text-ink">${esc(sent.email)}</b> y este PIN entrás a <b class="text-ink">Mis pedidos</b> para seguir tu pedido y comparar presupuestos. También te lo enviamos por email.</p>
+    </div>` : `<div class="mb-6 flex items-start gap-3 rounded-2xl bg-sand p-4 text-sm text-stone-600"><i data-lucide="user-check" class="mt-0.5 h-5 w-5 shrink-0 text-emerald-600"></i><span>${sent.existed ? `Ya tenés acceso con <b>${esc(sent.email)}</b>: entrá a Mis pedidos con tu PIN para seguir este pedido.` : `Lo sumamos a tus pedidos, <b>${esc(sent.nombre)}</b>.`}</span></div>`}` : ''}
+    <div class="grid grid-cols-2 gap-2 text-sm sm:grid-cols-4 sm:gap-3">
+      <div class="rounded-2xl bg-sand p-3.5"><p class="text-[11px] font-bold uppercase tracking-wider text-stone-400">Solicitante</p><p class="mt-1 font-bold">${TIPO_LABEL[currentTipo()]}${empresa}</p></div>
+      <div class="rounded-2xl bg-sand p-3.5"><p class="text-[11px] font-bold uppercase tracking-wider text-stone-400">Obra</p><p class="mt-1 font-bold">${esc(loc)}</p></div>
+      <div class="rounded-2xl bg-sand p-3.5"><p class="text-[11px] font-bold uppercase tracking-wider text-stone-400">Entrega</p><p class="mt-1 font-bold">${fmtDate($('#fecha').value)}</p></div>
+      <div class="rounded-2xl bg-sand p-3.5"><p class="text-[11px] font-bold uppercase tracking-wider text-stone-400">Descarga</p><p class="mt-1 font-bold">${esc($('#acceso').value)}</p></div>
+    </div>
+    <!-- phone: list -->
+    <ol class="mt-5 divide-y divide-stone-100 rounded-2xl ring-1 ring-stone-200 sm:hidden">
+      ${items.map((i, k) => `<li class="flex items-center gap-3 px-4 py-3"><span class="text-xs font-bold text-stone-400 tabular-nums">${k + 1}</span><span class="min-w-0 flex-1 text-sm font-semibold">${esc(i.name)}</span><span class="shrink-0 text-sm font-bold tabular-nums">${esc(i.qty || '—')} ${esc(i.unit)}</span></li>`).join('')}
+      <li class="flex justify-between bg-brand-50/60 px-4 py-3 text-xs font-bold text-brand-700"><span>El corralón completa</span><span>precio · flete · demora</span></li>
+    </ol>
+    <!-- desktop: table -->
+    <div class="mt-6 hidden overflow-hidden rounded-2xl ring-1 ring-stone-200 sm:block">
+      <table class="w-full text-sm">
+        <thead class="bg-brand-50 text-left text-[11px] font-bold uppercase tracking-wider text-brand-700">
+          <tr><th class="px-4 py-3">#</th><th class="px-4 py-3">Material</th><th class="px-4 py-3 text-right">Cantidad</th><th class="bg-brand-600 px-4 py-3 text-right">Precio unit.</th></tr>
+        </thead>
+        <tbody class="divide-y divide-stone-100">
+          ${items.map((i, k) => `<tr><td class="px-4 py-3 font-bold text-stone-400 tabular-nums">${k + 1}</td><td class="px-4 py-3 font-semibold">${esc(i.name)}</td><td class="px-4 py-3 text-right font-bold tabular-nums">${esc(i.qty || '—')} ${esc(i.unit)}</td><td class="bg-brand-50/60 px-4 py-3 text-right">${blank}</td></tr>`).join('')}
+        </tbody>
+        <tfoot class="border-t-2 border-stone-200">
+          <tr><td colspan="3" class="px-4 py-3 text-right font-bold">Flete</td><td class="bg-brand-50/60 px-4 py-3 text-right">${blank}</td></tr>
+          <tr><td colspan="3" class="px-4 py-3 text-right font-bold">Tiempo de entrega</td><td class="bg-brand-50/60 px-4 py-3 text-right text-brand-400">______</td></tr>
+        </tfoot>
+      </table>
+    </div>
+    ${$('#notas').value.trim() ? `<p class="mt-4 rounded-2xl bg-amber-50 p-4 text-sm text-amber-900"><span class="font-bold">Notas:</span> ${esc($('#notas').value.trim())}</p>` : ''}
+    <p class="mt-4 flex items-center gap-2 text-xs text-stone-400"><i data-lucide="lock" class="h-4 w-4"></i>Tus datos de contacto se revelan al corralón solo cuando aceptás su presupuesto.</p>
+    <div class="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+      ${sent ? `<button type="button" id="newOrder" class="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-stone-200 px-6 text-sm font-bold hover:border-ink"><i data-lucide="plus" class="h-4 w-4"></i>Hacer otro pedido</button>
+               <a href="mis-pedidos.html#${sent.id}" class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-brand-600 px-6 text-sm font-bold text-white hover:bg-brand-700">Seguir mi pedido<i data-lucide="arrow-right" class="h-4 w-4"></i></a>`
+             : `<button type="button" class="modal-ok inline-flex h-12 items-center justify-center rounded-full bg-brand-600 px-7 text-sm font-bold text-white hover:bg-brand-700">Seguir editando</button>`}
+    </div>`;
+}
+function openOrder(sent) {
+  $('#modalKicker').textContent = sent ? 'Pedido enviado' : 'Vista previa · así lo recibe el corralón';
+  $('#modalTitle').textContent = sent ? `Pedido ${sent.id}` : 'Tu pedido (borrador)';
+  $('#modalBody').innerHTML = orderHTML(sent);
+  $('#modalBody').scrollTop = 0;
+  renderIcons();
+  openSheet($('#modalCard'));
+}
+$('#modalClose').addEventListener('click', () => closeSheet());
+$('#modalCard').addEventListener('click', e => {
+  if (e.target.closest('.modal-ok')) closeSheet();
+  const cp = e.target.closest('#copyPin');
+  if (cp) { (navigator.clipboard ? navigator.clipboard.writeText(cp.dataset.pin) : Promise.reject()).then(() => toast('PIN copiado', { type: 'success' })).catch(() => toast('Anotá tu PIN', { desc: cp.dataset.pin })); }
+  if (e.target.closest('#newOrder')) {
+    closeSheet();
+    $('#rows').innerHTML = ''; for (let i = 0; i < 5; i++) addRow({}, { animate: false });
+    $('#notas').value = ''; $('#fecha').value = ''; $('#acepto').checked = false;
+    update(); window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+});
+$$('.preview-btn').forEach(b => b.addEventListener('click', () => {
+  if (!getItems().some(i => i.name)) { toast('Todavía no hay materiales', { desc: 'Cargá alguno para ver la vista previa.' }); return; }
+  openOrder(false);
+}));
+$('#quoteForm').addEventListener('submit', e => {
+  e.preventDefault();
+  if (!validate()) return;
+  const email = $('#email').value.trim().toLowerCase();
+  const nombre = $('#nombre').value.trim(), apellido = $('#apellido').value.trim();
+  // client access: new email -> instant PIN; logged in -> nothing to do; known email -> use their existing PIN
+  let pin = null, existed = false;
+  const yo = CO.clienteActual();
+  if (!yo || yo.email !== email) {
+    const known = CO.db().clientes.find(c => c.email === email);
+    if (known) existed = true;
+    else pin = CO.clienteRegistrar({ nombre, apellido, email }).pin;
+  }
+  const pedidoNuevo = CO.crearPedido({
+    tipo: currentTipo(),
+    cliente: { nombre, apellido, email, telefono: $('#telefono').value.trim(), empresa: currentTipo() !== 'particular' ? $('#empresa').value.trim() : '' },
+    items: getItems().filter(i => i.name && i.qty).map(({ name, qty, unit }) => ({ name, qty, unit })),
+    provincia: $('#provincia').value, localidad: $('#localidad').value.trim(), direccion: $('#direccion').value.trim(),
+    fecha: $('#fecha').value, acceso: $('#acceso').value, notas: $('#notas').value.trim()
+  });
+  openOrder({ id: pedidoNuevo.id, pin, existed, email, nombre, dest: CO.destinatarios(pedidoNuevo).length });
+  toast('Pedido enviado', { type: 'success', desc: `${pedidoNuevo.id} · te avisamos cuando lleguen los presupuestos.` });
+  clearDraft(); refreshWho();
+});
+
+/* ---------- Logged-in client ---------- */
+function refreshWho() {
+  const c = CO.clienteActual();
+  $('#asWho').classList.toggle('hidden', !c); $('#asWho').classList.toggle('flex', !!c);
+  $('#pinNote').classList.toggle('hidden', !!c);
+  if (c) {
+    $('#asWhoName').textContent = `${c.nombre} ${c.apellido} · ${c.email}`;
+    if (!$('#nombre').value) $('#nombre').value = c.nombre;
+    if (!$('#apellido').value) $('#apellido').value = c.apellido;
+    if (!$('#email').value) $('#email').value = c.email;
+  }
+}
+$('#notMe').addEventListener('click', () => {
+  CO.logout('cliente'); ['nombre','apellido','email'].forEach(k => $('#' + k).value = '');
+  refreshWho(); CO.decorarHeader(); $('#nombre').focus();
+});
+
+/* ---------- Listas guardadas ---------- */
+function loadItems(items, replace) {
+  if (replace) $('#rows').innerHTML = '';
+  items.forEach(d => { const row = replace ? null : firstEmptyRow(); if (row) { $('.m-name', row).value = d.name; $('.m-qty', row).value = d.qty; $('.m-unit', row).value = d.unit || 'u'; } else addRow(d, { animate: false }); });
+  for (let i = $$('.mat-row').length; i < 5; i++) addRow({}, { animate: false });
+  renumber(); update();
+}
+function refreshListsCount() { const n = CO.listas().length, b = $('#listsCount'); b.textContent = n; b.classList.toggle('hidden', !n); }
+function listsSheet(view) {
+  const ls = CO.listas(), items = getItems().filter(i => i.name);
+  $('#modalKicker').textContent = view === 'save' ? 'Guardar para la próxima' : 'Tus listas guardadas';
+  $('#modalTitle').textContent = view === 'save' ? 'Guardar esta lista' : 'Mis listas';
+  $('#modalBody').innerHTML = view === 'save' ? `
+    <form id="saveListForm" novalidate>
+      <p class="text-sm text-stone-500">Guardá estos ${items.length} materiales con un nombre para volver a pedirlos en otra obra. ${CO.clienteActual() ? 'Quedan en tu cuenta.' : 'Quedan guardados en este dispositivo; entrando con tu PIN los podés tener en tu cuenta.'}</p>
+      <label class="label mt-5" for="listName">Nombre de la lista</label>
+      <input id="listName" class="field" placeholder="Ej.: Platea 10x8, Mampostería planta alta" maxlength="60" />
+      <div class="mt-3 flex flex-wrap gap-2">${['Platea', 'Mampostería', 'Techo de chapa', 'Instalación sanitaria', 'Terminaciones'].map(s => `<button type="button" class="name-sugg no-press rounded-full bg-sand px-3 py-1.5 text-xs font-semibold text-stone-700 hover:bg-stone-200">${s}</button>`).join('')}</div>
+      <div class="mt-7 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+        <button type="button" class="modal-ok inline-flex h-12 items-center justify-center rounded-full border border-stone-200 px-6 text-sm font-bold hover:border-ink">Cancelar</button>
+        <button type="submit" class="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-brand-600 px-6 text-sm font-bold text-white hover:bg-brand-700"><i data-lucide="bookmark-plus" class="h-4 w-4"></i>Guardar lista</button>
+      </div>
+    </form>` : ls.length ? `
+    <ul class="divide-y divide-stone-100">${ls.map(l => `
+      <li class="flex flex-wrap items-center gap-3 py-3.5">
+        <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-sand"><i data-lucide="list-checks" class="h-5 w-5"></i></span>
+        <span class="min-w-0 flex-1"><span class="block truncate font-bold">${esc(l.nombre)}</span><span class="block truncate text-xs text-stone-500">${l.items.length} materiales · ${CO.timeAgo(l.at)} · ${esc(l.items.slice(0, 3).map(i => i.name).join(', '))}${l.items.length > 3 ? '…' : ''}</span></span>
+        <span class="flex w-full gap-2 sm:w-auto">
+          <button type="button" class="list-load flex-1 inline-flex h-10 items-center justify-center gap-1.5 rounded-full bg-brand-600 px-4 text-xs font-bold text-white hover:bg-brand-700 sm:flex-none" data-id="${l.id}"><i data-lucide="download" class="h-4 w-4"></i>Cargar</button>
+          <button type="button" class="list-add flex-1 inline-flex h-10 items-center justify-center gap-1.5 rounded-full border border-stone-200 px-4 text-xs font-bold hover:border-ink sm:flex-none" data-id="${l.id}"><i data-lucide="plus" class="h-4 w-4"></i>Sumar</button>
+          <button type="button" class="list-del grid h-10 w-10 shrink-0 place-items-center rounded-full text-stone-400 hover:bg-brand-50 hover:text-brand-600" data-id="${l.id}" aria-label="Borrar ${esc(l.nombre)}"><i data-lucide="trash-2" class="h-4 w-4"></i></button>
+        </span>
+      </li>`).join('')}</ul>
+    <p class="mt-4 text-xs text-stone-500"><b>Cargar</b> reemplaza los materiales actuales · <b>Sumar</b> los agrega a los que ya tenés.</p>`
+    : `<div class="grid place-items-center px-4 py-10 text-center"><span class="grid h-14 w-14 place-items-center rounded-full bg-sand text-stone-500"><i data-lucide="folder-open" class="h-7 w-7"></i></span><p class="mt-4 font-bold">Todavía no guardaste listas</p><p class="mt-1 max-w-xs text-sm text-stone-500">Armá tu pedido y tocá “Guardar lista” para reutilizarlo en la próxima obra.</p></div>`;
+  renderIcons();
+  openSheet($('#modalCard'));
+  const f = $('#saveListForm');
+  if (f) {
+    const n = $('#listName'); if (!isPhone()) setTimeout(() => n.focus(), 350);
+    $$('.name-sugg').forEach(b => b.addEventListener('click', () => { n.value = b.textContent; n.focus(); }));
+    f.addEventListener('submit', e => {
+      e.preventDefault();
+      if (!n.value.trim()) { n.classList.add('invalid'); n.focus(); return; }
+      const r = CO.guardarLista(n.value, getItems().filter(i => i.name).map(({ name, qty, unit }) => ({ name, qty, unit })));
+      closeSheet(); refreshListsCount();
+      toast(r.actualizada ? 'Lista actualizada' : 'Lista guardada', { type: 'success', desc: `“${n.value.trim()}” · la encontrás en Mis listas.` });
+    });
+  }
+}
+$('#saveList').addEventListener('click', () => {
+  if (!getItems().some(i => i.name)) { toast('Tu lista está vacía', { desc: 'Cargá materiales para poder guardarla.' }); return; }
+  listsSheet('save');
+});
+$('#openLists').addEventListener('click', () => listsSheet('list'));
+$('#modalCard').addEventListener('click', e => {
+  const ld = e.target.closest('.list-load, .list-add'), del = e.target.closest('.list-del');
+  if (ld) {
+    const l = CO.listas().find(x => x.id === ld.dataset.id); if (!l) return;
+    loadItems(l.items, ld.classList.contains('list-load')); closeSheet();
+    toast(`Cargamos “${l.nombre}”`, { type: 'success', desc: 'Revisá las cantidades para esta obra.' });
+  }
+  if (del) { const l = CO.listas().find(x => x.id === del.dataset.id); CO.borrarLista(del.dataset.id); refreshListsCount(); listsSheet('list'); if (l) toast(`Borraste “${l.nombre}”`); }
+});
+
+/* ---------- Init ---------- */
+PROVINCIAS.forEach(p => $('#provincia').insertAdjacentHTML('beforeend', `<option>${p}</option>`));
+const today = new Date(); today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+$('#fecha').min = today.toISOString().slice(0, 10);
+
+(function init() {
+  const draft = loadDraft();
+  const qs = new URLSearchParams(location.search), handoff = CO.recibir();
+  const params = { get: k => qs.get(k) || handoff[k] || null };   // datos del buscador del inicio o de "Repetir pedido"
+  const items = draft && draft.items && draft.items.length ? draft.items : [];
+  items.forEach(d => addRow(d, { animate: false }));
+  for (let i = items.length; i < 5; i++) addRow({}, { animate: false });
+  if (draft) {
+    const r = $(`input[name=tipo][value=${draft.tipo}]`); if (r) r.checked = true;
+    FIELDS.forEach(k => { if (draft.f && draft.f[k] != null) $('#' + k).value = draft.f[k]; });
+  }
+  // values coming from the home page search bar win
+  if (params.get('tipo')) { const r = $(`input[name=tipo][value=${params.get('tipo')}]`); if (r) r.checked = true; }
+  if (params.get('provincia')) $('#provincia').value = params.get('provincia');
+  if (params.get('localidad')) $('#localidad').value = params.get('localidad');
+  renderQuick(RUBRO_CAT[params.get('rubro')]);
+  // materiales escritos en el buscador del inicio: "40 bolsas de cemento, 6 m3 de arena"
+  const desdeInicio = (params.get('materiales') || '').split(/[,;\n]+|\s+y\s+(?=\d)/).map(x => x.trim()).filter(Boolean).map(parseLine);
+  if (desdeInicio.length) loadItems(desdeInicio, false);
+  // "Repetir pedido" desde Mis pedidos
+  const rep = params.get('repetir') && CO.pedido(params.get('repetir'));
+  if (rep) {
+    loadItems(rep.items, true);
+    const r = $(`input[name=tipo][value=${rep.tipo}]`); if (r) r.checked = true;
+    ['provincia', 'localidad', 'direccion', 'acceso'].forEach(k => { if (rep[k]) $('#' + k).value = rep[k]; });
+    $('#fecha').value = '';
+    try { history.replaceState(null, '', location.pathname); } catch (e) { /* dentro de la app no hay dirección que limpiar */ }
+  }
+  onTipo();
+  refreshWho();
+  refreshListsCount();
+  if (rep) toast(`Repetimos el pedido ${rep.id}`, { type: 'success', desc: 'Elegí la nueva fecha de entrega y ajustá lo que haga falta.' });
+  else if (desdeInicio.length) { toast(`Cargamos ${desdeInicio.length} material${desdeInicio.length > 1 ? 'es' : ''}`, { type: 'success', desc: 'Revisá la cantidad y la unidad, y sumá lo que falte.' }); const r = firstEmptyRow(); if (r) setTimeout(() => $('.m-name', r).focus({ preventScroll: true }), 300); }
+  else if (items.length) toast('Recuperamos tu borrador', { desc: `${items.length} materiales cargados la última vez.` });
+})();
+
+applyImages();
+renderIcons();
+$$('[data-reveal], [data-stagger]').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
